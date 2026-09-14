@@ -1,0 +1,975 @@
+<title>Sécurisation de l'usine GRFICS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+  :root{
+    --ground:#EFF2F4;
+    --surface:#FFFFFF;
+    --surface-2:#F6F8F9;
+    --ink:#12181D;
+    --ink-soft:#4B5862;
+    --ink-faint:#73828C;
+    --line:#D2DAE0;
+    --line-strong:#A9B6BF;
+    --accent:#14507B;
+    --accent-soft:#E3ECF3;
+    --signal:#A96A0C;
+    --signal-soft:#F7EEDF;
+    --critical:#9E2A2A;
+    --critical-soft:#F6E6E4;
+    --safe:#2C6B50;
+    --safe-soft:#E3EFE8;
+    --sans:"IBM Plex Sans Condensed",-apple-system,"Segoe UI",sans-serif;
+    --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Consolas,monospace;
+    --col:74ch;
+    --wide:1080px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0E1318;
+      --surface:#161D24;
+      --surface-2:#1B242C;
+      --ink:#E4EAEE;
+      --ink-soft:#9CAAB5;
+      --ink-faint:#7C8A95;
+      --line:#2A343D;
+      --line-strong:#3E4C57;
+      --accent:#6BABDC;
+      --accent-soft:#152B3C;
+      --signal:#DFA548;
+      --signal-soft:#332815;
+      --critical:#E0776F;
+      --critical-soft:#361D1C;
+      --safe:#6FBF95;
+      --safe-soft:#16301F;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0E1318;
+    --surface:#161D24;
+    --surface-2:#1B242C;
+    --ink:#E4EAEE;
+    --ink-soft:#9CAAB5;
+    --ink-faint:#7C8A95;
+    --line:#2A343D;
+    --line-strong:#3E4C57;
+    --accent:#6BABDC;
+    --accent-soft:#152B3C;
+    --signal:#DFA548;
+    --signal-soft:#332815;
+    --critical:#E0776F;
+    --critical-soft:#361D1C;
+    --safe:#6FBF95;
+    --safe-soft:#16301F;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--ground);
+    color:var(--ink);
+    font-family:var(--serif);
+    font-size:16.5px;
+    line-height:1.62;
+    margin:0;
+    padding-inline:20px;
+    padding-block:0 72px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--wide);margin:0 auto}
+  .col{max-width:var(--col)}
+  p{margin:0 0 1em}
+  a{color:var(--accent)}
+
+  /* ---------- en-tête ---------- */
+  header.masthead{
+    border-bottom:3px solid var(--ink);
+    padding-block:38px 22px;
+    margin-bottom:34px;
+  }
+  .kicker{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:18px;
+  }
+  h1{
+    font-family:var(--sans);font-weight:700;font-size:clamp(34px,6vw,58px);
+    line-height:1.03;letter-spacing:-.015em;margin:0 0 12px;text-wrap:balance;
+  }
+  .standfirst{font-size:19px;color:var(--ink-soft);max-width:62ch;margin:0}
+  .meta-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:2px;
+    margin-top:28px;background:var(--line);border:1px solid var(--line);
+  }
+  .meta-grid div{background:var(--surface);padding:11px 14px}
+  .meta-grid dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:3px}
+  .meta-grid dd{margin:0;font-family:var(--sans);font-size:16px;font-weight:600}
+
+  /* ---------- sections ---------- */
+  section{margin-block:52px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line-strong);padding-bottom:8px;margin-bottom:22px}
+  .sec-num{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.06em}
+  h2{font-family:var(--sans);font-weight:700;font-size:clamp(24px,3.4vw,33px);letter-spacing:-.01em;margin:0;text-wrap:balance}
+  h3{font-family:var(--sans);font-weight:600;font-size:21px;margin:34px 0 10px;letter-spacing:-.005em}
+  h4{font-family:var(--sans);font-weight:600;font-size:17px;margin:22px 0 6px}
+  .lede{font-size:18px;color:var(--ink-soft)}
+
+  /* ---------- planches ---------- */
+  figure{margin:26px 0 0}
+  .planche{
+    background:var(--surface);border:1px solid var(--line);
+    padding:16px;overflow-x:auto;
+  }
+  .planche svg{display:block;min-width:760px;width:100%;height:auto;max-width:100%}
+  figcaption{
+    font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);
+    margin-top:10px;line-height:1.5;
+  }
+  figcaption b{color:var(--ink-soft);font-weight:600}
+
+  /* ---------- tableaux ---------- */
+  .table-scroll{overflow-x:auto;border:1px solid var(--line);background:var(--surface);margin:22px 0}
+  table{border-collapse:collapse;width:100%;min-width:620px;font-family:var(--sans);font-size:14.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{
+    background:var(--surface-2);font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--ink-soft);font-weight:600;white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:none}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px;white-space:nowrap}
+  tfoot td{background:var(--surface-2);font-weight:700;border-top:2px solid var(--line-strong)}
+  code,.mono{font-family:var(--mono);font-size:.88em}
+  td code{background:var(--surface-2);padding:1px 4px;border-radius:2px}
+
+  /* ---------- fiches vulnérabilité ---------- */
+  .fiches{display:grid;gap:14px;margin-top:24px}
+  .fiche{
+    background:var(--surface);border:1px solid var(--line);
+    border-left:5px solid var(--sev,var(--line-strong));
+    padding:16px 18px;
+  }
+  .fiche[data-sev="critique"]{--sev:var(--critical)}
+  .fiche[data-sev="majeur"]{--sev:var(--signal)}
+  .fiche[data-sev="modere"]{--sev:var(--accent)}
+  .fiche-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-bottom:8px}
+  .fiche-ref{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--sev)}
+  .fiche-title{font-family:var(--sans);font-weight:600;font-size:19px;flex:1 1 260px;margin:0}
+  .badges{display:flex;flex-wrap:wrap;gap:6px}
+  .badge{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;padding:2px 7px;
+    border:1px solid var(--line-strong);color:var(--ink-soft);white-space:nowrap;
+  }
+  .badge.sev{background:var(--sev);border-color:var(--sev);color:var(--surface)}
+  .fiche dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:10px 0 0;font-size:15.5px}
+  .fiche dt{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-faint);padding-top:5px;white-space:nowrap;
+  }
+  .fiche dd{margin:0}
+  @media (max-width:560px){
+    .fiche dl{grid-template-columns:1fr;gap:2px}
+    .fiche dt{padding-top:8px}
+  }
+
+  /* ---------- encadrés ---------- */
+  .callout{
+    border:1px solid var(--line);border-top:3px solid var(--accent);
+    background:var(--surface);padding:16px 18px;margin:24px 0;
+  }
+  .callout.alert{border-top-color:var(--critical)}
+  .callout.money{border-top-color:var(--signal)}
+  .callout h4{margin-top:0}
+  .callout p:last-child{margin-bottom:0}
+
+  .keyfig{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin:24px 0}
+  .keyfig div{background:var(--surface);padding:14px 16px}
+  .keyfig .v{font-family:var(--sans);font-weight:700;font-size:27px;line-height:1.1;font-variant-numeric:tabular-nums}
+  .keyfig .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin-top:5px}
+
+  ul,ol{padding-left:1.25em;margin:0 0 1em}
+  li{margin-bottom:.4em}
+  ul.tight li{margin-bottom:.15em}
+
+  .sl-scale{display:flex;flex-wrap:wrap;gap:1px;background:var(--line);border:1px solid var(--line);margin:20px 0}
+  .sl-scale div{background:var(--surface);padding:10px 13px;flex:1 1 150px}
+  .sl-scale b{font-family:var(--mono);font-size:12px;color:var(--accent);display:block;margin-bottom:3px}
+  .sl-scale span{font-size:14px;color:var(--ink-soft);font-family:var(--sans)}
+
+  .phase{border-left:2px solid var(--line-strong);padding-left:18px;margin:20px 0 20px 4px;position:relative}
+  .phase::before{content:"";position:absolute;left:-6px;top:7px;width:10px;height:10px;background:var(--accent);border-radius:50%}
+  .phase h4{margin-top:0}
+  .phase .when{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+
+  footer{border-top:1px solid var(--line-strong);margin-top:56px;padding-top:18px;font-family:var(--mono);font-size:11.5px;color:var(--ink-faint)}
+  @media print{body{background:#fff} .planche{break-inside:avoid}}
+</style>
+
+<div class="wrap">
+
+<header class="masthead">
+  <div class="kicker">
+    <span>ECAM 5N — Promotion 2027</span><span>Projet encadré — Cybersécurité industrielle</span><span>Dossier technique</span>
+  </div>
+  <h1>Sécurisation de l'usine GRFICS</h1>
+  <p class="standfirst">Analyse des vulnérabilités exploitées en travaux pratiques, architecture cible, correctifs priorisés selon les niveaux de sécurité de l'IEC&nbsp;62443 et plan de contingence.</p>
+  <dl class="meta-grid">
+    <div><dt>Installation</dt><dd>Réacteur chimique — GRFICSv3</dd></div>
+    <div><dt>Périmètre</dt><dd>Zones ICS 192.168.95.0/24 &amp; DMZ 192.168.90.0/24</dd></div>
+    <div><dt>Référentiel</dt><dd>IEC 62443-3-3 / 62443-3-2</dd></div>
+    <div><dt>Coût d'indisponibilité</dt><dd>6&nbsp;500 € par heure d'arrêt</dd></div>
+  </dl>
+</header>
+
+<section class="col">
+  <div class="sec-head"><span class="sec-num">§1</span><h2>Contexte et méthode</h2></div>
+  <p class="lede">L'installation a été compromise en conditions d'exercice, jusqu'à l'<strong>explosion du réacteur</strong>. Le mode opératoire, rejoué pas à pas au TP, n'a exigé ni faille logicielle inédite, ni compétence rare&nbsp;: reconnaissance physique des lieux, mots de passe ramassés sur place, interception réseau, puis réécriture de la logique de l'automate. Le présent dossier part de cette intrusion pour établir ce qui doit être corrigé, dans quel ordre, à quel coût, et comment l'usine réagit si l'incident se reproduit.</p>
+
+  <div class="callout alert">
+    <h4>Chaîne d'attaque reconstituée à partir du compte-rendu de TP</h4>
+    <ol style="margin:0;padding-left:1.3em">
+      <li><strong>Reconnaissance physique</strong> — badge d'accès et porte mal fermée, secrets récupérés dans une poubelle, panneau IHM utilisable sans authentification, armoire électrique ouverte, routeur personnel branché sur le réseau. Mots de passe obtenus&nbsp;: poste d'ingénierie (rangée basse du clavier), compte <code>admin</code> de l'automate, mot de passe du routeur sur un post-it.</li>
+      <li><strong>Découverte réseau</strong> — depuis le poste attaquant <code>192.168.90.6</code>, balayage <code>nmap</code> de la DMZ&nbsp;: IHM en <code>90.107:8080</code>, routeur en <code>90.1</code> / <code>90.200</code> (DNS + interface d'administration 5000). L'automate est déduit sur un autre sous-réseau.</li>
+      <li><strong>Homme du milieu</strong> — <code>arpspoof</code> entre l'IHM (<code>90.107</code>) et l'automate (<code>95.2</code>), <code>ip_forward</code> activé&nbsp;; capture Wireshark des trames Modbus en clair, révélant le sous-réseau procédé <code>192.168.95.0/24</code>.</li>
+      <li><strong>Cartographie du procédé</strong> — <code>nmap -p 502</code> sur la zone OT&nbsp;: six esclaves Modbus (Feed 1/2, Purge, Product, <strong>Réacteur .95.14</strong>, Analyzer)&nbsp;; bannières relevées avec le module Metasploit <code>modbus_banner_grabbing</code>.</li>
+      <li><strong>Prise de l'automate</strong> — accès noVNC du poste d'ingénierie (<code>95.5:6080</code>), ouverture du projet OpenPLC « chemical », injection de <code>pressure_sp := 65535;</code>&nbsp;: la consigne de pression est saturée, la vanne de purge ne s'ouvre plus, la pression monte sans régulation. Compilation, téléversement via l'interface web de l'automate, redémarrage → <strong>explosion</strong>.</li>
+    </ol>
+  </div>
+
+  <p>La démarche suit la logique de l'<strong>IEC 62443-3-2</strong> : identifier le système à l'étude, le découper en <em>zones</em> et <em>conduits</em>, évaluer le risque pour chaque zone, puis attribuer à chacune un niveau de sécurité cible (SL-T) et en déduire les exigences fondamentales de l'<strong>IEC 62443-3-3</strong>. Les techniques d'attaque observées sont référencées avec le cadre <strong>MITRE ATT&amp;CK for ICS</strong> afin de relier chaque correctif à un mode opératoire concret plutôt qu'à une exigence abstraite.</p>
+
+  <h3>Rappel des niveaux de sécurité</h3>
+  <div class="sl-scale">
+    <div><b>SL 1</b><span>Protection contre une violation fortuite ou accidentelle.</span></div>
+    <div><b>SL 2</b><span>Attaquant intentionnel, moyens faibles, compétences génériques.</span></div>
+    <div><b>SL 3</b><span>Attaquant motivé, moyens modérés, compétences spécifiques aux SI industriels.</span></div>
+    <div><b>SL 4</b><span>Attaquant disposant de moyens étendus et de ressources d'État.</span></div>
+  </div>
+  <p>Le mode opératoire du TP — distribution Kali standard, identifiants par défaut, bibliothèque Modbus publique, plugin OT de Caldera — correspond exactement au profil <strong>SL 2</strong>. Or l'installation n'oppose aujourd'hui <strong>aucune</strong> contre-mesure : elle se situe au niveau <strong>SL 0</strong>. L'écart à combler est donc, au minimum, de SL 0 à SL 2 partout, et de SL 0 à <strong>SL 3</strong> sur la zone de contrôle, qui commande directement un procédé dangereux.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">§2</span><h2>Architecture initiale</h2></div>
+  <div class="col">
+    <p>Deux sous-réseaux à plat séparés par un routeur Linux, lui-même ouvert en grand. Toutes les interfaces d'administration sont exposées en HTTP, tous les comptes sont ceux d'origine, et le protocole de commande du procédé — Modbus/TCP — circule sans authentification ni contrôle d'intégrité.</p>
+  </div>
+
+  <figure>
+    <div class="planche">
+      <svg viewBox="0 0 1000 700" role="img" aria-label="Architecture réseau initiale de l'usine GRFICS : zone bureautique DMZ, routeur pare-feu ouvert, zone procédé ICS, et chemin d'attaque.">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"/>
+          </marker>
+          <marker id="ar-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--critical)"/>
+          </marker>
+        </defs>
+        <style>
+          .z-lbl{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;font-weight:600}
+          .z-note{font-family:var(--mono);font-size:10.5px;fill:var(--ink-faint)}
+          .n-t{font-family:var(--sans);font-size:14px;font-weight:600;fill:var(--ink)}
+          .n-ip{font-family:var(--mono);font-size:11px;fill:var(--accent)}
+          .n-s{font-family:var(--mono);font-size:10.5px;fill:var(--ink-soft)}
+          .n-c{font-family:var(--mono);font-size:10.5px;fill:var(--critical)}
+          .f-lbl{font-family:var(--mono);font-size:10.5px;fill:var(--ink-soft)}
+          .f-red{font-family:var(--mono);font-size:11px;fill:var(--critical);font-weight:500}
+          .step{font-family:var(--mono);font-size:11px;font-weight:600;fill:#fff}
+        </style>
+
+        <!-- bandeau administration -->
+        <rect x="30" y="14" width="940" height="40" fill="var(--surface-2)" stroke="var(--line-strong)" stroke-dasharray="5 4"/>
+        <text x="46" y="39" class="z-note" fill="var(--ink-soft)">RÉSEAU D'ADMINISTRATION — bridge Docker « a-grfics-admin » : relie tous les équipements des deux zones, hors du pare-feu, sans journalisation</text>
+        <line x1="500" y1="54" x2="500" y2="76" stroke="var(--line-strong)" stroke-dasharray="4 3"/>
+        <line x1="500" y1="620" x2="500" y2="648" stroke="var(--line-strong)" stroke-dasharray="4 3"/>
+
+        <!-- ZONE DMZ -->
+        <rect x="30" y="76" width="940" height="186" fill="none" stroke="var(--signal)" stroke-width="1.5"/>
+        <rect x="30" y="76" width="940" height="24" fill="var(--signal-soft)"/>
+        <text x="44" y="93" class="z-lbl" fill="var(--signal)">ZONE BUREAUTIQUE / DMZ — 192.168.90.0/24</text>
+        <text x="966" y="93" class="z-note" text-anchor="end">réseau plat · aucune séparation IT / OT</text>
+
+        <g>
+          <rect x="46" y="112" width="215" height="134" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="58" y="133" class="n-t">IHM Scada-LTS 2.7.8.1</text>
+          <text x="58" y="150" class="n-ip">192.168.90.107</text>
+          <text x="58" y="170" class="n-s">HTTP 8080 (Tomcat 9)</text>
+          <text x="58" y="186" class="n-s">MariaDB 3306 · root:root</text>
+          <text x="58" y="202" class="n-s">vues, alarmes, consignes</text>
+          <text x="58" y="228" class="n-c">admin:admin — SHA-1 non salé</text>
+        </g>
+        <g>
+          <rect x="281" y="112" width="215" height="134" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="293" y="133" class="n-t">Poste attaquant (Kali)</text>
+          <text x="293" y="150" class="n-ip">192.168.90.6</text>
+          <text x="293" y="170" class="n-s">noVNC 6088 · sudo NOPASSWD</text>
+          <text x="293" y="186" class="n-s">nmap, dsniff/arpspoof</text>
+          <text x="293" y="202" class="n-s">pymodbus, metasploit</text>
+          <text x="293" y="228" class="n-c">kali:kali — outil offensif</text>
+        </g>
+        <g>
+          <rect x="516" y="112" width="215" height="134" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="528" y="133" class="n-t">MITRE Caldera</text>
+          <text x="528" y="150" class="n-ip">192.168.90.250</text>
+          <text x="528" y="170" class="n-s">HTTP 8888 · plugin Modbus</text>
+          <text x="528" y="186" class="n-s">agents sandcat</text>
+          <text x="528" y="202" class="n-s">scénarios T0888 / T0855</text>
+          <text x="528" y="228" class="n-c">red:fortiphyd-red</text>
+        </g>
+        <g>
+          <rect x="751" y="112" width="215" height="134" fill="var(--surface)" stroke="var(--line)" stroke-dasharray="4 3"/>
+          <text x="763" y="133" class="n-t" fill="var(--ink-faint)">SIEM Wazuh</text>
+          <text x="763" y="150" class="n-ip" fill="var(--ink-faint)">192.168.90.20</text>
+          <text x="763" y="170" class="n-s">agents 1514-1515</text>
+          <text x="763" y="186" class="n-s">tableau de bord 5601</text>
+          <text x="763" y="202" class="n-s">2 agents seulement</text>
+          <text x="763" y="228" class="n-c">désactivé par défaut</text>
+        </g>
+
+        <!-- PARE-FEU -->
+        <rect x="30" y="292" width="940" height="92" fill="var(--critical-soft)" stroke="var(--critical)" stroke-width="1.5"/>
+        <text x="46" y="316" class="z-lbl" fill="var(--critical)">ROUTEUR / PARE-FEU iptables — 192.168.90.200 ↔ 192.168.95.200</text>
+        <text x="46" y="341" class="f-red">FORWARD : -s 0.0.0.0/0 -d 0.0.0.0/0 -j ACCEPT   « TEMP - allow all traffic for troubleshooting - DO NOT LEAVE IN PRODUCTION »</text>
+        <text x="46" y="360" class="f-red">FORWARD : -s 192.168.95.0/24 -j ACCEPT   (zone procédé réputée « de confiance », sortie libre)</text>
+        <text x="46" y="376" class="n-s">Suricata IDS : écoute la DMZ uniquement · MODBUS_CLIENT = HOME_NET, donc les règles « écriture non autorisée » ne se déclenchent jamais · IHM d'administration en HTTP, admin:password</text>
+
+        <!-- ZONE ICS -->
+        <rect x="30" y="414" width="940" height="234" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+        <rect x="30" y="414" width="940" height="24" fill="var(--accent-soft)"/>
+        <text x="44" y="431" class="z-lbl" fill="var(--accent)">ZONE PROCÉDÉ / ICS — 192.168.95.0/24</text>
+        <text x="966" y="431" class="z-note" text-anchor="end">niveaux 0 à 2 confondus sur un même VLAN</text>
+
+        <g>
+          <rect x="46" y="450" width="215" height="134" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="58" y="471" class="n-t">Automate OpenPLC v3</text>
+          <text x="58" y="488" class="n-ip">192.168.95.2</text>
+          <text x="58" y="508" class="n-s">Modbus/TCP 502 (serveur)</text>
+          <text x="58" y="524" class="n-s">Web 8080 · dépôt de code ST</text>
+          <text x="58" y="540" class="n-s">Debian bullseye (fin de vie)</text>
+          <text x="58" y="566" class="n-c">openplc:openplc — en clair</text>
+        </g>
+        <g>
+          <rect x="281" y="450" width="215" height="134" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="293" y="471" class="n-t">Poste d'ingénierie</text>
+          <text x="293" y="488" class="n-ip">192.168.95.5</text>
+          <text x="293" y="508" class="n-s">noVNC 6080 sans mot de passe</text>
+          <text x="293" y="524" class="n-s">OpenPLC Editor · Firefox</text>
+          <text x="293" y="540" class="n-s">→ dépose le ST sur .95.2:8080</text>
+          <text x="293" y="566" class="n-c">engineer:zxcvbnm · VNC changeme</text>
+        </g>
+        <g>
+          <rect x="516" y="450" width="215" height="134" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="528" y="471" class="n-t">Serveur de simulation</text>
+          <text x="528" y="488" class="n-ip">192.168.95.45</text>
+          <text x="528" y="508" class="n-s">modèle du réacteur</text>
+          <text x="528" y="524" class="n-s">socket JSON 55555</text>
+          <text x="528" y="540" class="n-s">visualisation 3D (HTTP 80)</text>
+          <text x="528" y="566" class="n-c">monte /var/run/docker.sock</text>
+        </g>
+        <g>
+          <rect x="751" y="450" width="215" height="134" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="763" y="471" class="n-t">E/S déportées Modbus</text>
+          <text x="763" y="488" class="n-ip">192.168.95.10 → .15</text>
+          <text x="763" y="508" class="n-s">Feed 1/2, Purge, Product,</text>
+          <text x="763" y="524" class="n-c" style="font-weight:600">Réacteur .95.14, Analyzer</text>
+          <text x="763" y="540" class="n-s">esclave 247 · port 502</text>
+          <text x="763" y="566" class="n-c">aucune authentification → explosion</text>
+        </g>
+
+        <!-- flux IHM -> PLC -->
+        <line x1="120" y1="246" x2="120" y2="292" stroke="var(--ink-soft)" stroke-width="1.4" marker-end="url(#ar)"/>
+        <line x1="120" y1="384" x2="120" y2="450" stroke="var(--ink-soft)" stroke-width="1.4" marker-end="url(#ar)"/>
+        <text x="132" y="268" class="f-lbl">Modbus/TCP 502 — supervision</text>
+        <text x="132" y="410" class="f-lbl">et écriture des consignes</text>
+
+        <!-- boucle PLC <-> E/S -->
+        <path d="M153,584 L153,614 L858,614 L858,584" fill="none" stroke="var(--ink-soft)" stroke-width="1.4" marker-start="url(#ar)" marker-end="url(#ar)"/>
+        <text x="505" y="632" class="f-lbl" text-anchor="middle">Modbus/TCP 502 — scrutation 100 ms des six esclaves, en clair, sans authentification</text>
+
+        <!-- chemin d'attaque -->
+        <path d="M388,246 L388,272 L452,272 L452,404 L200,404 L200,450"
+              fill="none" stroke="var(--critical)" stroke-width="1.8" stroke-dasharray="7 4" marker-end="url(#ar-r)"/>
+        <circle cx="452" cy="338" r="11" fill="var(--critical)"/><text x="452" y="342" class="step" text-anchor="middle">1</text>
+        <circle cx="200" cy="450" r="11" fill="var(--critical)"/><text x="200" y="454" class="step" text-anchor="middle">2</text>
+        <circle cx="120" cy="292" r="11" fill="var(--critical)"/><text x="120" y="296" class="step" text-anchor="middle">3</text>
+        <text x="470" y="290" class="f-red">chemin d'attaque</text>
+      </svg>
+    </div>
+    <figcaption>
+      <b>Planche 1 — Architecture initiale (état constaté).</b>
+      Chemin d'attaque rejoué au TP : <b>1</b> pivot de la DMZ vers la zone procédé, aucune règle ne s'y oppose ·
+      <b>2</b> prise de contrôle du poste d'ingénierie puis dépôt d'un programme ST piégé (<code>pressure_sp := 65535</code>) via l'interface web de l'automate ·
+      <b>3</b> usurpation ARP sur le flux IHM → automate pour masquer la dérive à l'opérateur. Résultat : explosion du réacteur (.95.14).
+    </figcaption>
+  </figure>
+
+  <h3 class="col">Matrice des flux constatés</h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Source</th><th>Destination</th><th>Protocole / port</th><th>Usage</th><th>Contrôle en place</th></tr></thead>
+      <tbody>
+        <tr><td>IHM Scada-LTS <code>.90.107</code></td><td>Automate <code>.95.2</code></td><td>Modbus/TCP 502</td><td>Lecture des mesures, écriture des consignes</td><td class="mono" style="color:var(--critical)">aucun</td></tr>
+        <tr><td>Automate <code>.95.2</code></td><td>E/S déportées <code>.95.10-.15</code></td><td>Modbus/TCP 502</td><td>Scrutation 100 ms, commande des vannes</td><td class="mono" style="color:var(--critical)">aucun</td></tr>
+        <tr><td>E/S déportées</td><td>Moteur de simulation <code>.95.45</code></td><td>TCP 55555 (JSON)</td><td>Image du procédé physique</td><td class="mono" style="color:var(--critical)">aucun</td></tr>
+        <tr><td>Poste d'ingénierie <code>.95.5</code></td><td>Automate <code>.95.2</code></td><td>HTTP 8080</td><td>Dépôt et démarrage du programme ST</td><td class="mono" style="color:var(--critical)">mot de passe par défaut</td></tr>
+        <tr><td>Navigateurs (hôte)</td><td>IHM, automate, postes</td><td>HTTP 80/6080/6081/8080/8888</td><td>Exploitation et administration</td><td class="mono" style="color:var(--critical)">en clair</td></tr>
+        <tr><td>Routeur, IHM</td><td>Wazuh <code>.90.20</code></td><td>TCP 1514/1515</td><td>Journalisation (si activée)</td><td class="mono" style="color:var(--signal)">partiel, 2 agents</td></tr>
+        <tr><td>Tous</td><td>Routeur <code>.200</code></td><td>UDP 53 · TCP 5000</td><td>DNS et administration du pare-feu</td><td class="mono" style="color:var(--critical)">HTTP, admin:password</td></tr>
+        <tr><td>Tous</td><td>Tous</td><td>bridge d'administration</td><td>Canal hors-bande non maîtrisé</td><td class="mono" style="color:var(--critical)">hors pare-feu</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">§3</span><h2>Analyse des vulnérabilités</h2></div>
+  <div class="col">
+    <p>Treize vulnérabilités ont été retenues. Chacune est rattachée aux exigences système (SR) de l'IEC 62443-3-3 et à la technique ATT&amp;CK for ICS correspondante. Les cinq premières sont celles qui ont été directement exploitées pendant le TP&nbsp;; elles conditionnent la totalité de la chaîne d'attaque.</p>
+  </div>
+
+  <div class="fiches">
+
+    <article class="fiche" data-sev="critique">
+      <div class="fiche-head">
+        <span class="fiche-ref">V1</span>
+        <h3 class="fiche-title" style="margin:0">Pare-feu ouvert en grand entre la DMZ et la zone procédé</h3>
+        <div class="badges"><span class="badge sev">Critique</span><span class="badge">SR 5.1 · 5.2 · 7.6</span><span class="badge">SL atteint : 0</span></div>
+      </div>
+      <dl>
+        <dt>Constat</dt><dd>La configuration livrée contient une unique règle <code>-s 0.0.0.0/0 -d 0.0.0.0/0 -j ACCEPT</code>, commentée « TEMP - allow all traffic for troubleshooting - DO NOT LEAVE IN PRODUCTION », complétée par un <code>-s 192.168.95.0/24 -j ACCEPT</code> permanent qui autorise toute sortie de la zone procédé.</dd>
+        <dt>Exploitation</dt><dd>Depuis le poste Kali en DMZ, balayage puis accès direct à <code>192.168.95.2:502</code> et <code>:8080</code>. Aucun pivot, aucune élévation de privilèges nécessaire.</dd>
+        <dt>Impact</dt><dd>La segmentation n'existe que sur le schéma. Toute machine bureautique compromise atteint l'automate en une étape.</dd>
+        <dt>ATT&amp;CK ICS</dt><dd>T0886 Remote Services · T0883 Internet Accessible Device</dd>
+      </dl>
+    </article>
+
+    <article class="fiche" data-sev="critique">
+      <div class="fiche-head">
+        <span class="fiche-ref">V2</span>
+        <h3 class="fiche-title" style="margin:0">Identifiants par défaut sur l'intégralité du parc</h3>
+        <div class="badges"><span class="badge sev">Critique</span><span class="badge">SR 1.1 · 1.5 · 1.7</span><span class="badge">SL atteint : 0</span></div>
+      </div>
+      <dl>
+        <dt>Constat</dt><dd>Compte <code>admin</code> de l'automate deviné, mot de passe du poste d'ingénierie correspondant à la rangée basse du clavier, mot de passe du routeur affiché sur un post-it. Au niveau du parc&nbsp;: <code>openplc:openplc</code> (en clair dans <code>openplc.db</code>), <code>admin:admin</code> sur l'IHM (empreinte SHA-1 non salée <code>0DPiKuNIrrVmD8IUCuw1hQxNqZc=</code>), mot de passe d'administration du pare-feu, <code>root:root</code> et <code>scada:scada</code> sur la base, mot de passe VNC par défaut sur le poste d'ingénierie, <code>admin:admin</code> sur le SIEM.</dd>
+        <dt>Exploitation</dt><dd>Au TP, connexion directe aux interfaces d'administration sans exploitation de faille logicielle&nbsp;: c'est ce compte <code>admin</code> qui a permis de téléverser le programme piégé sur l'automate. Aucun compte nominatif, donc aucune imputabilité des actions.</dd>
+        <dt>Impact</dt><dd>Contrôle total de la chaîne de commande et effacement possible des traces.</dd>
+        <dt>ATT&amp;CK ICS</dt><dd>T0859 Valid Accounts · T0812 Default Credentials</dd>
+      </dl>
+    </article>
+
+    <article class="fiche" data-sev="critique">
+      <div class="fiche-head">
+        <span class="fiche-ref">V3</span>
+        <h3 class="fiche-title" style="margin:0">Modbus/TCP sans authentification ni contrôle d'intégrité</h3>
+        <div class="badges"><span class="badge sev">Critique</span><span class="badge">SR 1.1 · 1.2 · 3.1 · 3.5</span><span class="badge">SL atteint : 0</span></div>
+      </div>
+      <dl>
+        <dt>Constat</dt><dd>Le protocole ne porte ni identité, ni signature, ni horodatage. Les six esclaves (<code>.10</code> à <code>.15</code>) et l'automate acceptent toute écriture de registre ou de bobine provenant de n'importe quelle adresse.</dd>
+        <dt>Exploitation</dt><dd>Écriture directe des registres de commande de vannes avec <code>pymodbus</code> ou le plugin Modbus de Caldera, en contournant totalement la logique de régulation.</dd>
+        <dt>Impact</dt><dd>Ouverture ou fermeture arbitraire des vannes d'alimentation et de purge&nbsp;: montée en pression du réacteur jusqu'à la rupture, sans qu'aucune mesure logicielle ne s'y oppose.</dd>
+        <dt>ATT&amp;CK ICS</dt><dd>T0855 Unauthorized Command Message · T0836 Modify Parameter · T0831 Manipulation of Control</dd>
+      </dl>
+    </article>
+
+    <article class="fiche" data-sev="critique">
+      <div class="fiche-head">
+        <span class="fiche-ref">V4</span>
+        <h3 class="fiche-title" style="margin:0">Dépôt de programme automate non contrôlé</h3>
+        <div class="badges"><span class="badge sev">Critique</span><span class="badge">SR 3.4 · 3.8 · 2.1</span><span class="badge">SL atteint : 0</span></div>
+      </div>
+      <dl>
+        <dt>Constat</dt><dd>L'interface web de l'automate (port 8080) permet de téléverser un programme ST, de le compiler et de le passer en RUN. Le programme n'est ni signé, ni versionné, ni comparé à une référence&nbsp;; l'automate ne dispose d'aucun commutateur RUN/PROG matériel. Le poste d'ingénierie (noVNC <code>95.5:6080</code>) donne accès à l'éditeur OpenPLC et au projet « chemical » d'origine.</dd>
+        <dt>Exploitation</dt><dd><strong>C'est l'étape qui a détruit le réacteur.</strong> Ajout de <code>pressure_sp := 65535;</code> en fin de programme&nbsp;: la consigne de pression est saturée au maximum, la logique n'ouvre plus la vanne de purge, la pression monte sans régulation. Export en <code>Attack.st</code>, téléversement via l'interface web, redémarrage de l'automate → explosion.</dd>
+        <dt>Impact</dt><dd>Persistance de l'attaquant dans l'organe de commande lui-même&nbsp;: la seule protection contre la surpression était cette logique, désormais retournée contre le procédé. Un redémarrage ne suffit pas à revenir à un état sain.</dd>
+        <dt>ATT&amp;CK ICS</dt><dd>T0843 Program Download · T0889 Modify Program</dd>
+      </dl>
+    </article>
+
+    <article class="fiche" data-sev="critique">
+      <div class="fiche-head">
+        <span class="fiche-ref">V5</span>
+        <h3 class="fiche-title" style="margin:0">Usurpation ARP et interception des flux de conduite</h3>
+        <div class="badges"><span class="badge sev">Critique</span><span class="badge">SR 3.1 · 3.5 · 5.1</span><span class="badge">SL atteint : 0</span></div>
+      </div>
+      <dl>
+        <dt>Constat</dt><dd>Les deux réseaux sont plats et commutés sans inspection ARP dynamique ni 802.1X. Le poste attaquant embarque <code>dsniff</code> / <code>arpspoof</code> et est configuré pour l'usurpation.</dd>
+        <dt>Exploitation</dt><dd>Au TP&nbsp;: <code>sysctl -w net.ipv4.ip_forward=1</code> puis <code>arpspoof</code> croisé entre l'IHM (<code>90.107</code>) et l'automate (<code>95.2</code>). Wireshark (filtre <code>modbus</code>/<code>arp</code>) a capturé les trames Modbus en clair et révélé le sous-réseau procédé <code>192.168.95.x</code> — c'est ce qui a ouvert la porte vers la zone OT.</dd>
+        <dt>Impact</dt><dd>Perte de confiance dans la supervision — l'opérateur ne peut plus détecter l'incident ni décider d'un arrêt.</dd>
+        <dt>ATT&amp;CK ICS</dt><dd>T0830 Adversary-in-the-Middle · T0856 Spoof Reporting Message · T0832 Manipulation of View</dd>
+      </dl>
+    </article>
+
+    <article class="fiche" data-sev="majeur">
+      <div class="fiche-head">
+        <span class="fiche-ref">V6</span>
+        <h3 class="fiche-title" style="margin:0">Administration en clair (HTTP, VNC)</h3>
+        <div class="badges"><span class="badge sev">Majeur</span><span class="badge">SR 3.1 · 4.1 · 4.2</span><span class="badge">SL atteint : 0</span></div>
+      </div>
+      <dl>
+        <dt>Constat</dt><dd>Automate (8080), IHM (8080), pare-feu (5000), bureaux distants noVNC (6080/6088), visualisation (80) : tout est en HTTP. Le cookie de session du pare-feu est signé avec la clé par défaut <code>some-long-secret-you-generate</code>.</dd>
+        <dt>Exploitation</dt><dd>Capture des identifiants par écoute passive après usurpation ARP&nbsp;; forge d'un cookie d'administration du pare-feu sans connaître le mot de passe.</dd>
+        <dt>Impact</dt><dd>Compromission des accès d'administration, y compris de l'équipement de filtrage lui-même.</dd>
+        <dt>ATT&amp;CK ICS</dt><dd>T0842 Network Sniffing · T0860 Wireless Compromise <span class="mono" style="color:var(--ink-faint)">(n/a ici)</span></dd>
+      </dl>
+    </article>
+
+    <article class="fiche" data-sev="majeur">
+      <div class="fiche-head">
+        <span class="fiche-ref">V7</span>
+        <h3 class="fiche-title" style="margin:0">Détection inopérante : IDS mal paramétré, zone procédé non surveillée</h3>
+        <div class="badges"><span class="badge sev">Majeur</span><span class="badge">SR 6.1 · 6.2</span><span class="badge">SL atteint : 0</span></div>
+      </div>
+      <dl>
+        <dt>Constat</dt><dd>Suricata n'écoute que l'interface DMZ (<code>ids_monitor = {LAN: false, DMZ: true}</code>). Les règles Quickdraw « écriture Modbus non autorisée » sont écrites <code>!$MODBUS_CLIENT</code>, or la variable vaut <code>HOME_NET</code>, c'est-à-dire <em>tout</em> le plan d'adressage privé : la règle ne peut jamais se déclencher.</dd>
+        <dt>Exploitation</dt><dd>L'ensemble des écritures Modbus malveillantes du TP n'a généré aucune alerte.</dd>
+        <dt>Impact</dt><dd>Aucune chance de détecter l'attaque avant l'effet physique. C'est le correctif au meilleur rapport coût / bénéfice de tout le plan.</dd>
+        <dt>ATT&amp;CK ICS</dt><dd>Défaut de couverture — contre-mesure des techniques T0855 / T0843</dd>
+      </dl>
+    </article>
+
+    <article class="fiche" data-sev="majeur">
+      <div class="fiche-head">
+        <span class="fiche-ref">V8</span>
+        <h3 class="fiche-title" style="margin:0">Journalisation absente ou non centralisée</h3>
+        <div class="badges"><span class="badge sev">Majeur</span><span class="badge">SR 2.8 · 2.9 · 2.11 · 6.1</span><span class="badge">SL atteint : 0</span></div>
+      </div>
+      <dl>
+        <dt>Constat</dt><dd>Le SIEM est facultatif et désactivé par défaut. Seuls deux agents existent (routeur, IHM)&nbsp;: ni l'automate, ni le poste d'ingénierie, ni le serveur de simulation ne remontent quoi que ce soit. Pas de source de temps commune.</dd>
+        <dt>Exploitation</dt><dd>Aucune trace du dépôt de programme ni des écritures Modbus&nbsp;; analyse post-incident impossible.</dd>
+        <dt>Impact</dt><dd>Ni détection, ni imputabilité, ni preuve en cas de déclaration réglementaire.</dd>
+        <dt>ATT&amp;CK ICS</dt><dd>T0872 Indicator Removal on Host (facilité)</dd>
+      </dl>
+    </article>
+
+    <article class="fiche" data-sev="majeur">
+      <div class="fiche-head">
+        <span class="fiche-ref">V9</span>
+        <h3 class="fiche-title" style="margin:0">Composants obsolètes et non corrigés</h3>
+        <div class="badges"><span class="badge sev">Majeur</span><span class="badge">SR 3.10 · 7.2</span><span class="badge">SL atteint : 0</span></div>
+      </div>
+      <dl>
+        <dt>Constat</dt><dd>L'automate tourne sur Debian bullseye, en fin de vie, dont le dépôt de sécurité a été explicitement retiré de la configuration. Scada-LTS 2.7.8.1 sur Tomcat 9, empreintes SHA-1 non salées. Mots de passe en clair dans la base de l'automate. Aucun inventaire ni processus de correctifs.</dd>
+        <dt>Exploitation</dt><dd>Non exploité au TP, mais constitue le réservoir de failles pour une attaque ultérieure.</dd>
+        <dt>Impact</dt><dd>Surface d'attaque croissante et impossibilité de démontrer la maîtrise des versions.</dd>
+        <dt>ATT&amp;CK ICS</dt><dd>T0866 Exploitation of Remote Services</dd>
+      </dl>
+    </article>
+
+    <article class="fiche" data-sev="majeur">
+      <div class="fiche-head">
+        <span class="fiche-ref">V10</span>
+        <h3 class="fiche-title" style="margin:0">Réseau d'administration hors périmètre et accès à l'hyperviseur</h3>
+        <div class="badges"><span class="badge sev">Majeur</span><span class="badge">SR 5.1 · 7.7</span><span class="badge">SL atteint : 0</span></div>
+      </div>
+      <dl>
+        <dt>Constat</dt><dd>Un réseau d'administration commun relie tous les équipements des deux zones sans passer par le pare-feu. Le serveur de simulation monte en outre la socket de l'hôte de virtualisation (<code>/var/run/docker.sock</code>).</dd>
+        <dt>Exploitation</dt><dd>Contournement complet du filtrage&nbsp;; depuis le serveur de simulation, contrôle de l'hôte et donc de tous les équipements virtualisés.</dd>
+        <dt>Impact</dt><dd>Tout l'effort de segmentation devient caduc si ce canal subsiste.</dd>
+        <dt>ATT&amp;CK ICS</dt><dd>T0812 Default Credentials · évasion de conteneur</dd>
+      </dl>
+    </article>
+
+    <article class="fiche" data-sev="modere">
+      <div class="fiche-head">
+        <span class="fiche-ref">V11</span>
+        <h3 class="fiche-title" style="margin:0">Outillage offensif hébergé en production</h3>
+        <div class="badges"><span class="badge sev">Modéré</span><span class="badge">SR 7.8 · 2.1</span><span class="badge">SL atteint : 0</span></div>
+      </div>
+      <dl>
+        <dt>Constat</dt><dd>Un poste Kali et un serveur Caldera équipé du plugin Modbus sont raccordés en permanence à la DMZ, avec des identifiants publics.</dd>
+        <dt>Exploitation</dt><dd>L'attaquant n'a pas eu besoin d'apporter ses outils&nbsp;: ils étaient déjà sur le réseau, prêts à l'emploi.</dd>
+        <dt>Impact</dt><dd>Réduction drastique du coût d'entrée d'une attaque et pollution de l'inventaire des actifs.</dd>
+        <dt>ATT&amp;CK ICS</dt><dd>T0862 Supply Chain Compromise <span class="mono" style="color:var(--ink-faint)">(analogie)</span></dd>
+      </dl>
+    </article>
+
+    <article class="fiche" data-sev="critique">
+      <div class="fiche-head">
+        <span class="fiche-ref">V12</span>
+        <h3 class="fiche-title" style="margin:0">Aucune barrière de sécurité indépendante du système de conduite</h3>
+        <div class="badges"><span class="badge sev">Critique</span><span class="badge">IEC 61511 · 62443-3-2</span><span class="badge">SL atteint : 0</span></div>
+      </div>
+      <dl>
+        <dt>Constat</dt><dd>La seule protection contre la surpression du réacteur est la logique de l'automate — c'est-à-dire précisément l'organe que l'attaquant contrôle. Ni capteur indépendant, ni automate de sécurité, ni interlock câblé, ni organe de décharge.</dd>
+        <dt>Exploitation</dt><dd>La compromission de l'automate suffit à conduire le procédé jusqu'à la destruction.</dd>
+        <dt>Impact</dt><dd>Conséquences humaines et environnementales, au-delà du coût d'indisponibilité. C'est le fondement du plan de contingence du §7.</dd>
+        <dt>ATT&amp;CK ICS</dt><dd>T0880 Loss of Safety · T0879 Damage to Property</dd>
+      </dl>
+    </article>
+
+    <article class="fiche" data-sev="modere">
+      <div class="fiche-head">
+        <span class="fiche-ref">V13</span>
+        <h3 class="fiche-title" style="margin:0">Hygiène physique et organisationnelle</h3>
+        <div class="badges"><span class="badge sev">Modéré</span><span class="badge">62443-2-1 · SR 2.1</span><span class="badge">SL atteint : 0</span></div>
+      </div>
+      <dl>
+        <dt>Constat</dt><dd>Relevés lors de la visite du TP&nbsp;: badge d'accès disponible et porte mal fermée, secrets et mots de passe jetés dans une poubelle, panneau IHM utilisable sans authentification, armoire électrique ouverte, routeur personnel branché sur le réseau, et une fontaine à eau adossée à un local électrique. Aucune séparation des espaces bureautiques et industriels.</dd>
+        <dt>Exploitation</dt><dd>C'est le point de départ réel de l'attaque&nbsp;: les mots de passe du routeur et de l'automate ont été obtenus <em>physiquement</em>, avant toute action réseau. Un accès de quelques minutes donne les mêmes pouvoirs qu'une intrusion à distance, sans laisser de trace.</dd>
+        <dt>Impact</dt><dd>Contournement de toutes les mesures logiques mises en place.</dd>
+        <dt>ATT&amp;CK ICS</dt><dd>T0864 Transient Cyber Asset · T0847 Replication Through Removable Media</dd>
+      </dl>
+    </article>
+
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">§4</span><h2>Architecture cible</h2></div>
+  <div class="col">
+    <p>L'architecture cible applique le découpage en zones et conduits de l'IEC 62443-3-2 sur un modèle Purdue. Chaque zone reçoit un niveau de sécurité cible, chaque conduit n'autorise qu'une liste explicite de flux, et tout le reste est refusé <em>et journalisé</em>. Le principe directeur&nbsp;: un flux qui n'est pas nécessaire à la conduite du procédé n'a pas de raison d'exister.</p>
+  </div>
+
+  <figure>
+    <div class="planche">
+      <svg viewBox="0 0 1000 790" role="img" aria-label="Architecture cible en zones et conduits selon le modèle Purdue, du niveau entreprise au niveau procédé.">
+        <style>
+          .lvl{font-family:var(--mono);font-size:10.5px;fill:var(--ink-faint);letter-spacing:.06em}
+          .lvl-n{font-family:var(--sans);font-size:15px;font-weight:700;fill:var(--ink)}
+          .zt{font-family:var(--mono);font-size:11px;letter-spacing:.1em;font-weight:600}
+          .chip-t{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--ink)}
+          .chip-s{font-family:var(--mono);font-size:10px;fill:var(--ink-soft)}
+          .cond{font-family:var(--mono);font-size:10.5px;fill:var(--ink)}
+          .deny{font-family:var(--mono);font-size:10px;fill:var(--critical)}
+          .slt{font-family:var(--mono);font-size:10.5px;font-weight:600}
+        </style>
+        <defs>
+          <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+
+        <!-- NIVEAU 4/5 -->
+        <text x="24" y="44" class="lvl-n">Niveau 4-5</text>
+        <text x="24" y="60" class="lvl">Entreprise</text>
+        <rect x="170" y="24" width="800" height="62" fill="var(--surface-2)" stroke="var(--line-strong)"/>
+        <text x="186" y="46" class="zt" fill="var(--ink-soft)">SYSTÈME D'INFORMATION DE GESTION — hors périmètre OT</text>
+        <text x="186" y="70" class="chip-s">Postes bureautiques · ERP · messagerie — aucun accès direct aux zones industrielles</text>
+
+        <!-- conduit 1 -->
+        <line x1="570" y1="86" x2="570" y2="112" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar2)"/>
+        <rect x="250" y="90" width="640" height="22" fill="var(--accent-soft)" stroke="var(--accent)"/>
+        <text x="262" y="105" class="cond">CONDUIT 1 — rebond obligatoire par le bastion : SSH/RDP sur tunnel chiffré, double facteur, session enregistrée</text>
+
+        <!-- NIVEAU 3.5 DMZ -->
+        <text x="24" y="150" class="lvl-n">Niveau 3.5</text>
+        <text x="24" y="166" class="lvl">DMZ industrielle</text>
+        <text x="24" y="186" class="slt" fill="var(--signal)">SL-T 2</text>
+        <rect x="170" y="124" width="800" height="118" fill="none" stroke="var(--signal)" stroke-width="1.5"/>
+        <rect x="170" y="124" width="800" height="22" fill="var(--signal-soft)"/>
+        <text x="184" y="140" class="zt" fill="var(--signal)">ZONE D'ÉCHANGE — 192.168.90.0/24</text>
+        <g>
+          <rect x="184" y="158" width="184" height="70" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="194" y="178" class="chip-t">Bastion d'administration</text>
+          <text x="194" y="196" class="chip-s">MFA · comptes nominatifs</text>
+          <text x="194" y="212" class="chip-s">enregistrement des sessions</text>
+        </g>
+        <g>
+          <rect x="380" y="158" width="184" height="70" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="390" y="178" class="chip-t">Historian / relais OPC UA</text>
+          <text x="390" y="196" class="chip-s">lecture seule vers l'IT</text>
+          <text x="390" y="212" class="chip-s">rupture de protocole</text>
+        </g>
+        <g>
+          <rect x="576" y="158" width="184" height="70" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="586" y="178" class="chip-t">SIEM Wazuh</text>
+          <text x="586" y="196" class="chip-s">agents sur tous les actifs</text>
+          <text x="586" y="212" class="chip-s">alertes OT · NTP interne</text>
+        </g>
+        <g>
+          <rect x="772" y="158" width="184" height="70" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="782" y="178" class="chip-t">Serveur de correctifs</text>
+          <text x="782" y="196" class="chip-s">dépôt hors ligne validé</text>
+          <text x="782" y="212" class="chip-s">antivirus · média maîtrisé</text>
+        </g>
+
+        <!-- conduit 2 -->
+        <line x1="570" y1="242" x2="570" y2="268" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar2)"/>
+        <rect x="250" y="246" width="640" height="22" fill="var(--accent-soft)" stroke="var(--accent)"/>
+        <text x="262" y="261" class="cond">CONDUIT 2 — OPC UA chiffré et authentifié, sens supervision → DMZ uniquement (remontée de données)</text>
+
+        <!-- NIVEAU 2 -->
+        <text x="24" y="306" class="lvl-n">Niveau 2</text>
+        <text x="24" y="322" class="lvl">Supervision</text>
+        <text x="24" y="342" class="slt" fill="var(--accent)">SL-T 2</text>
+        <rect x="170" y="280" width="800" height="118" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+        <rect x="170" y="280" width="800" height="22" fill="var(--accent-soft)"/>
+        <text x="184" y="296" class="zt" fill="var(--accent)">ZONE DE CONDUITE — 192.168.94.0/24 (nouveau segment)</text>
+        <g>
+          <rect x="184" y="314" width="248" height="70" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="194" y="334" class="chip-t">IHM Scada-LTS durcie</text>
+          <text x="194" y="352" class="chip-s">version à jour · HTTPS</text>
+          <text x="194" y="368" class="chip-s">comptes nominatifs et rôles</text>
+        </g>
+        <g>
+          <rect x="444" y="314" width="248" height="70" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="454" y="334" class="chip-t">Postes opérateurs</text>
+          <text x="454" y="352" class="chip-s">liste blanche d'applications</text>
+          <text x="454" y="368" class="chip-s">USB désactivé</text>
+        </g>
+        <g>
+          <rect x="704" y="314" width="252" height="70" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="714" y="334" class="chip-t">Gestion des alarmes</text>
+          <text x="714" y="352" class="chip-s">seuils procédé et cyber</text>
+          <text x="714" y="368" class="chip-s">report vers le SIEM</text>
+        </g>
+
+        <!-- conduit 3 -->
+        <line x1="570" y1="398" x2="570" y2="424" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar2)"/>
+        <rect x="210" y="402" width="720" height="22" fill="var(--critical-soft)" stroke="var(--critical)"/>
+        <text x="222" y="417" class="cond" fill="var(--critical)">CONDUIT 3 — pare-feu industriel à inspection Modbus : IHM → automate seulement, FC 3/4 en lecture, FC 6/16 restreint aux registres de consigne</text>
+
+        <!-- NIVEAU 1 -->
+        <text x="24" y="462" class="lvl-n">Niveau 1</text>
+        <text x="24" y="478" class="lvl">Contrôle</text>
+        <text x="24" y="498" class="slt" fill="var(--critical)">SL-T 3</text>
+        <rect x="170" y="436" width="800" height="118" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+        <rect x="170" y="436" width="800" height="22" fill="var(--accent-soft)"/>
+        <text x="184" y="452" class="zt" fill="var(--accent)">ZONE AUTOMATE — 192.168.95.0/24</text>
+        <g>
+          <rect x="184" y="470" width="308" height="70" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="194" y="490" class="chip-t">Automate OpenPLC durci</text>
+          <text x="194" y="508" class="chip-s">web d'ingénierie fermé en exploitation</text>
+          <text x="194" y="524" class="chip-s">programme signé · empreinte vérifiée</text>
+        </g>
+        <g>
+          <rect x="504" y="470" width="308" height="70" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="514" y="490" class="chip-t">Poste d'ingénierie (zone dédiée)</text>
+          <text x="514" y="508" class="chip-s">accès par bastion, sur fenêtre planifiée</text>
+          <text x="514" y="524" class="chip-s">gestion de configuration du code ST</text>
+        </g>
+        <g>
+          <rect x="824" y="470" width="132" height="70" fill="var(--surface-2)" stroke="var(--line-strong)" stroke-dasharray="4 3"/>
+          <text x="834" y="490" class="chip-t">Sonde IDS</text>
+          <text x="834" y="508" class="chip-s">port miroir</text>
+          <text x="834" y="524" class="chip-s">règles Modbus</text>
+        </g>
+
+        <!-- conduit 4 -->
+        <line x1="570" y1="554" x2="570" y2="580" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar2)"/>
+        <rect x="250" y="558" width="640" height="22" fill="var(--accent-soft)" stroke="var(--accent)"/>
+        <text x="262" y="573" class="cond">CONDUIT 4 — segment cellule dédié : automate → E/S uniquement, 802.1X et inspection ARP dynamique sur le commutateur</text>
+
+        <!-- NIVEAU 0 -->
+        <text x="24" y="618" class="lvl-n">Niveau 0</text>
+        <text x="24" y="634" class="lvl">Procédé</text>
+        <text x="24" y="654" class="slt" fill="var(--critical)">SL-T 3</text>
+        <rect x="170" y="592" width="800" height="150" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+        <rect x="170" y="592" width="800" height="22" fill="var(--accent-soft)"/>
+        <text x="184" y="608" class="zt" fill="var(--accent)">ZONE PROCÉDÉ — 192.168.96.0/24 (segment cellule)</text>
+        <g>
+          <rect x="184" y="626" width="368" height="60" fill="var(--surface)" stroke="var(--line-strong)"/>
+          <text x="194" y="646" class="chip-t">E/S déportées — Feed 1/2, Purge, Product, Tank, Analyzer</text>
+          <text x="194" y="666" class="chip-s">adressage dédié · ports commutateur verrouillés par adresse MAC</text>
+        </g>
+        <g>
+          <rect x="564" y="626" width="392" height="100" fill="var(--safe-soft)" stroke="var(--safe)" stroke-width="1.5"/>
+          <text x="574" y="646" class="chip-t" fill="var(--safe)">BARRIÈRE DE SÉCURITÉ INDÉPENDANTE (SIL 2)</text>
+          <text x="574" y="666" class="chip-s">capteur de pression dédié, hors réseau de conduite</text>
+          <text x="574" y="684" class="chip-s">automate de sécurité + interlock câblé vers les vannes</text>
+          <text x="574" y="702" class="chip-s">organe de décharge mécanique — non pilotable logiciellement</text>
+          <text x="574" y="718" class="chip-s" fill="var(--safe)">met le procédé en repli même si l'automate est compromis</text>
+        </g>
+        <text x="184" y="706" class="deny">Aucun flux entrant depuis les niveaux supérieurs autre que le conduit 4.</text>
+        <text x="184" y="722" class="deny">Tout paquet non explicitement autorisé est refusé et journalisé vers le SIEM.</text>
+
+        <!-- rail IDS -->
+        <text x="988" y="112" class="lvl" text-anchor="end" transform="rotate(90 988 112)">SONDE IDS</text>
+      </svg>
+    </div>
+    <figcaption>
+      <b>Planche 2 — Architecture cible (zones, conduits et niveaux de sécurité cibles).</b>
+      Chaque conduit porte sa liste de flux autorisés et son mécanisme de contrôle&nbsp;; la posture par défaut est le refus journalisé.
+      La barrière de sécurité du niveau 0 est volontairement hors du réseau de conduite&nbsp;: elle reste efficace même en cas de compromission complète de l'automate.
+    </figcaption>
+  </figure>
+
+  <h3 class="col">Matrice des conduits</h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Conduit</th><th>Source → destination</th><th>Protocole autorisé</th><th>Restriction</th><th>Contrôle</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">C1</td><td>IT (N4) → DMZ (N3.5)</td><td>SSH / RDP sur tunnel chiffré</td><td>Vers le bastion uniquement, comptes nominatifs</td><td>MFA, enregistrement de session</td></tr>
+        <tr><td class="mono">C2</td><td>Supervision (N2) → DMZ</td><td>OPC UA (TLS, certificat)</td><td>Sens unique, données de production uniquement</td><td>Rupture de protocole sur l'historian</td></tr>
+        <tr><td class="mono">C3</td><td>IHM (N2) → Automate (N1)</td><td>Modbus/TCP 502</td><td>Une seule adresse source&nbsp;; FC 3/4 en lecture, FC 6/16 limités aux registres de consigne et bornés en valeur</td><td>Pare-feu industriel à inspection applicative + IDS</td></tr>
+        <tr><td class="mono">C3b</td><td>Poste d'ingénierie → Automate</td><td>HTTPS 8080</td><td>Ouvert uniquement pendant une fenêtre de maintenance déclarée</td><td>Bastion, MFA, validation à deux personnes</td></tr>
+        <tr><td class="mono">C4</td><td>Automate (N1) → E/S (N0)</td><td>Modbus/TCP 502</td><td>Segment cellule isolé, aucune autre source</td><td>802.1X, inspection ARP dynamique, verrouillage MAC</td></tr>
+        <tr><td class="mono">C5</td><td>Tous → SIEM (N3.5)</td><td>Agent chiffré 1514/1515</td><td>Sens unique, journaux uniquement</td><td>Agent sur chaque actif, horloge commune</td></tr>
+        <tr><td colspan="5" style="color:var(--critical);font-family:var(--mono);font-size:12.5px">Tout flux non listé : refusé et journalisé. Le réseau d'administration hors bande est supprimé.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">§5</span><h2>Correctifs, priorisation et coûts</h2></div>
+  <div class="col">
+    <p>La priorisation suit l'écart entre le niveau atteint (SL 0) et le niveau cible de chaque zone, pondéré par l'effet sur la chaîne d'attaque réelle. Un correctif qui coupe le chemin d'attaque du TP passe avant un correctif qui durcit un composant déjà inatteignable.</p>
+    <p>Hypothèses de chiffrage&nbsp;: <strong>480 €</strong> par jour d'ingénieur interne, <strong>950 €</strong> par jour de prestataire spécialisé en systèmes industriels, <strong>6 500 €</strong> par heure d'arrêt de production.</p>
+  </div>
+
+  <div class="keyfig">
+    <div><div class="v">222 570 €</div><div class="l">Programme complet, arrêts inclus</div></div>
+    <div><div class="v">134 820 €</div><div class="l">Si les travaux sont adossés aux arrêts planifiés</div></div>
+    <div><div class="v">17 850 €</div><div class="l">Lot 0 — chaîne d'attaque coupée en 2 semaines</div></div>
+    <div><div class="v">468 000 €</div><div class="l">Coût d'un incident type TP (72 h d'arrêt)</div></div>
+  </div>
+
+  <h3>Lot 0 — Urgent : couper la chaîne d'attaque <span class="mono" style="font-size:13px;color:var(--ink-faint)">(0 à 2 semaines, SL 0 → SL 2)</span></h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Réf</th><th>Correctif</th><th>Vuln.</th><th>SR</th><th class="num">Charge</th><th class="num">Matériel</th><th class="num">Arrêt</th><th class="num">Coût</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">C1</td><td>Pare-feu en refus par défaut, une règle par conduit, suppression de la règle « TEMP » et du <code>-s 192.168.95.0/24 ACCEPT</code></td><td class="mono">V1</td><td class="mono">5.1 5.2</td><td class="num">1 j int. + 3 j ext.</td><td class="num">—</td><td class="num">0,5 h</td><td class="num">6 580</td></tr>
+        <tr><td class="mono">C2</td><td>Éradication des identifiants par défaut, comptes nominatifs, coffre-fort de secrets, rotation des clés de session</td><td class="mono">V2 V6</td><td class="mono">1.1 1.5 1.7</td><td class="num">4 j int.</td><td class="num">—</td><td class="num">0</td><td class="num">1 920</td></tr>
+        <tr><td class="mono">C3</td><td>Retrait du poste Kali et du serveur Caldera du réseau de production&nbsp;; mise en place d'un inventaire des actifs</td><td class="mono">V11</td><td class="mono">7.8</td><td class="num">1 j int.</td><td class="num">—</td><td class="num">0</td><td class="num">480</td></tr>
+        <tr><td class="mono">C4</td><td>Paramétrage de l'IDS&nbsp;: <code>MODBUS_CLIENT</code> limité à l'IHM et à l'automate, surveillance de la zone procédé, activation des règles Quickdraw</td><td class="mono">V7</td><td class="mono">6.1 6.2</td><td class="num">2 j ext.</td><td class="num">—</td><td class="num">0</td><td class="num">1 900</td></tr>
+        <tr><td class="mono">C5</td><td>Activation du SIEM, agents sur tous les actifs, six règles d'alerte OT (écriture Modbus hors IHM, dépôt de programme, connexion hors fenêtre…)</td><td class="mono">V8</td><td class="mono">6.1 2.8</td><td class="num">2 j int. + 3 j ext.</td><td class="num">2 200</td><td class="num">0</td><td class="num">6 010</td></tr>
+        <tr><td class="mono">C6</td><td>Sauvegarde hors ligne du programme automate, de la configuration IHM et des règles de pare-feu, avec empreintes SHA-256 de référence</td><td class="mono">V4</td><td class="mono">7.3 7.4</td><td class="num">2 j int.</td><td class="num">—</td><td class="num">0</td><td class="num">960</td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="6">Sous-total lot 0</td><td class="num">0,5 h</td><td class="num">17 850 €</td></tr></tfoot>
+    </table>
+  </div>
+  <div class="callout col">
+    <h4>Pourquoi ce lot d'abord</h4>
+    <p>Il représente <strong>8 % du budget</strong> et supprime les trois premiers maillons de la chaîne d'attaque du TP&nbsp;: le pivot libre, les identifiants par défaut et l'absence totale de détection. À lui seul, il fait passer les deux zones de SL 0 à SL 2, c'est-à-dire au niveau exactement suffisant pour résister au profil d'attaquant rencontré.</p>
+  </div>
+
+  <h3>Lot 1 — Consolidation <span class="mono" style="font-size:13px;color:var(--ink-faint)">(1 à 3 mois, SL 2 confirmé)</span></h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Réf</th><th>Correctif</th><th>Vuln.</th><th>SR</th><th class="num">Charge</th><th class="num">Matériel</th><th class="num">Arrêt</th><th class="num">Coût</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">C7</td><td>Bastion d'administration avec double facteur, suppression des accès directs aux interfaces techniques</td><td class="mono">V2 V6</td><td class="mono">1.1 1.13 2.6</td><td class="num">3 j int. + 3 j ext.</td><td class="num">2 500</td><td class="num">0</td><td class="num">6 790</td></tr>
+        <tr><td class="mono">C8</td><td>TLS interne (PKI) sur toutes les interfaces d'administration, désactivation de HTTP et du VNC non chiffré</td><td class="mono">V6</td><td class="mono">3.1 4.1</td><td class="num">4 j int.</td><td class="num">300</td><td class="num">0</td><td class="num">2 220</td></tr>
+        <tr><td class="mono">C9</td><td>Durcissement de l'automate&nbsp;: interface de programmation fermée en exploitation, comptes nominatifs, DNP3/EtherNet-IP désactivés, sortie de la distribution en fin de vie</td><td class="mono">V4 V9</td><td class="mono">3.4 3.10 7.2</td><td class="num">2 j int. + 5 j ext.</td><td class="num">—</td><td class="num">1 h</td><td class="num">12 210</td></tr>
+        <tr><td class="mono">C10</td><td>Déplacement de l'IHM vers la zone de conduite (N2) et mise en place du relais OPC UA en DMZ</td><td class="mono">V1 V10</td><td class="mono">5.1 5.2</td><td class="num">1 j int. + 5 j ext.</td><td class="num">—</td><td class="num">1 h</td><td class="num">11 730</td></tr>
+        <tr><td class="mono">C11</td><td>Durcissement de Scada-LTS&nbsp;: montée de version, rôles, condensats robustes, comptes de base de données dédiés</td><td class="mono">V2 V9</td><td class="mono">1.5 1.7 3.10</td><td class="num">1 j int. + 3 j ext.</td><td class="num">—</td><td class="num">0</td><td class="num">3 330</td></tr>
+        <tr><td class="mono">C12</td><td>Journalisation des accès d'administration, source de temps interne commune</td><td class="mono">V8</td><td class="mono">2.8 2.11</td><td class="num">2 j int.</td><td class="num">—</td><td class="num">0</td><td class="num">960</td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="6">Sous-total lot 1</td><td class="num">2 h</td><td class="num">37 240 €</td></tr></tfoot>
+    </table>
+  </div>
+
+  <h3>Lot 2 — Structurel <span class="mono" style="font-size:13px;color:var(--ink-faint)">(3 à 12 mois, SL 3 sur les zones de contrôle et de procédé)</span></h3>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Réf</th><th>Correctif</th><th>Vuln.</th><th>SR</th><th class="num">Charge</th><th class="num">Matériel</th><th class="num">Arrêt</th><th class="num">Coût</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">C13</td><td>Re-segmentation physique&nbsp;: deux commutateurs industriels de niveau 3 (VLAN par zone, inspection ARP dynamique, 802.1X), suppression du réseau d'administration hors bande</td><td class="mono">V5 V10</td><td class="mono">5.1 5.2 1.2</td><td class="num">2 j int. + 8 j ext.</td><td class="num">6 400</td><td class="num">2 h</td><td class="num">27 960</td></tr>
+        <tr><td class="mono">C14</td><td>Pare-feu industriel à inspection applicative Modbus&nbsp;: liste blanche de codes fonction et bornage des valeurs de consigne</td><td class="mono">V3</td><td class="mono">3.1 3.5 5.2</td><td class="num">1 j int. + 6 j ext.</td><td class="num">8 500</td><td class="num">1 h</td><td class="num">21 180</td></tr>
+        <tr><td class="mono">C15</td><td>Barrière de sécurité indépendante&nbsp;: capteur de pression dédié, automate de sécurité SIL 2, interlock câblé et organe de décharge mécanique</td><td class="mono">V12</td><td class="mono">IEC 61511</td><td class="num">5 j int. + 10 j ext.</td><td class="num">32 000</td><td class="num">8 h</td><td class="num">95 900</td></tr>
+        <tr><td class="mono">C16</td><td>Sauvegardes hors ligne, plan de reprise testé, jumeau numérique pour valider les modifications avant déploiement</td><td class="mono">V4 V9</td><td class="mono">7.3 7.4</td><td class="num">6 j int.</td><td class="num">1 500</td><td class="num">0</td><td class="num">4 380</td></tr>
+        <tr><td class="mono">C17</td><td>Formation des équipes d'exploitation et de maintenance (20 personnes) et exercice de crise annuel</td><td class="mono">V13</td><td class="mono">62443-2-1</td><td class="num">2 j int. + 6 j ext.</td><td class="num">—</td><td class="num">0</td><td class="num">6 660</td></tr>
+        <tr><td class="mono">C18</td><td>Audit de conformité IEC 62443-3-3 et test d'intrusion sur le jumeau numérique</td><td class="mono">toutes</td><td class="mono">62443-2-4</td><td class="num">12 j ext.</td><td class="num">—</td><td class="num">0</td><td class="num">11 400</td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="6">Sous-total lot 2</td><td class="num">11 h</td><td class="num">167 480 €</td></tr></tfoot>
+    </table>
+  </div>
+
+  <div class="callout money col">
+    <h4>Lecture économique</h4>
+    <p>Sur les 222 570 € du programme, <strong>87 750 € ne sont pas des dépenses de sécurité mais de l'indisponibilité</strong> (13,5 h × 6 500 €). En adossant les travaux aux arrêts de maintenance déjà planifiés — notamment les 8 h de la barrière de sécurité — le coût réel tombe à <strong>134 820 €</strong>. C'est le premier levier d'arbitrage à présenter à la direction.</p>
+    <p>En regard, l'incident rejoué en TP conduit à un arrêt d'au moins 72 h le temps de restaurer l'automate, requalifier le procédé et expertiser le réacteur, soit <strong>468 000 €</strong> de production perdue — hors dommages matériels, conséquences humaines et environnementales. Le programme complet se rembourse en <strong>moins d'un incident évité</strong>&nbsp;; le lot 0, en moins de trois heures d'arrêt.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">§6</span><h2>Stratégie de mise en exécution</h2></div>
+  <div class="col">
+    <p>Une usine ne se sécurise pas en arrêtant la production. La stratégie repose sur trois principes&nbsp;: valider hors ligne, grouper les arrêts, et ne jamais déployer sans point de retour.</p>
+
+    <div class="phase">
+      <div class="when">Semaines 1 à 2 — Lot 0</div>
+      <h4>Reprise de contrôle</h4>
+      <p>Travaux réalisables en marche, à l'exception d'une fenêtre de 30 minutes pour la bascule du pare-feu. Séquence&nbsp;: rédaction des règles à partir de la matrice des conduits, essai sur le jumeau numérique, déploiement en mode « journalisation seule » pendant 72 h pour détecter les flux légitimes oubliés, puis passage en blocage effectif avec procédure de retour arrière préparée. La rotation des identifiants est menée en parallèle, équipement par équipement, avec consignation dans le coffre-fort.</p>
+    </div>
+
+    <div class="phase">
+      <div class="when">Mois 1 à 3 — Lot 1</div>
+      <h4>Consolidation des accès</h4>
+      <p>Le bastion et le chiffrement se déploient sans impact procédé. Les deux heures d'arrêt (automate et IHM) sont regroupées sur <strong>une seule fenêtre technique</strong>, de préférence lors d'un arrêt hebdomadaire existant&nbsp;: coût marginal nul au lieu de 13 000 €. Chaque modification passe par une demande de changement formalisée, avec essai préalable sur le jumeau numérique et validation de l'exploitant.</p>
+    </div>
+
+    <div class="phase">
+      <div class="when">Mois 3 à 12 — Lot 2</div>
+      <h4>Refonte structurelle</h4>
+      <p>Le recâblage, le pare-feu industriel et la barrière de sécurité représentent 11 h d'arrêt. Ils sont <strong>intégralement adossés à l'arrêt annuel de maintenance</strong>, ce qui neutralise les 71 500 € d'indisponibilité correspondants. La mise en service de la barrière SIL 2 suit le cycle de l'IEC 61511&nbsp;: spécification, réalisation, essais de bon fonctionnement documentés, puis exploitation avec tests périodiques.</p>
+    </div>
+
+    <div class="phase">
+      <div class="when">En continu</div>
+      <h4>Maintien en condition de sécurité</h4>
+      <p>Comité mensuel de suivi, revue trimestrielle des règles de filtrage, application des correctifs sur fenêtre planifiée après qualification, exercice de crise annuel, et audit de conformité en fin de programme pour attester le niveau atteint.</p>
+    </div>
+
+    <h3>Indicateurs de pilotage</h3>
+    <ul>
+      <li><strong>Couverture du filtrage</strong> — part des flux passant par une règle explicite (cible&nbsp;: 100 %, mesure hebdomadaire sur les journaux de refus).</li>
+      <li><strong>Comptes par défaut restants</strong> — cible zéro dès la semaine 2, vérifié par balayage automatisé.</li>
+      <li><strong>Délai de détection</strong> — temps entre une écriture Modbus illégitime injectée en test et l'alerte SIEM (cible&nbsp;: moins de 5 minutes).</li>
+      <li><strong>Actifs journalisés</strong> — part des équipements remontant au SIEM (cible&nbsp;: 100 %).</li>
+      <li><strong>Restauration testée</strong> — délai de remise en service de l'automate depuis la sauvegarde de référence (cible&nbsp;: moins de 2 h, testé deux fois par an).</li>
+    </ul>
+
+    <h3>Facteurs de risque du programme</h3>
+    <ul class="tight">
+      <li>Un blocage trop précoce du pare-feu peut interrompre un flux non documenté — d'où la phase obligatoire de journalisation seule.</li>
+      <li>La montée de version de l'automate doit être qualifiée sur le jumeau numérique&nbsp;: une régression de la logique de régulation coûterait plus cher que la vulnérabilité corrigée.</li>
+      <li>La disponibilité du prestataire spécialisé conditionne les lots 1 et 2&nbsp;: à contractualiser dès le lancement.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">§7</span><h2>Plan de contingence</h2></div>
+  <div class="col">
+    <p class="lede">Le plan part d'un principe assumé&nbsp;: l'attaque réussira un jour. L'objectif n'est pas de l'empêcher absolument, mais de garantir que l'usine sait la voir, l'arrêter et redémarrer proprement.</p>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Phase</th><th>Déclencheur</th><th>Action</th><th>Responsable</th><th class="num">Objectif</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Détection</strong></td><td>Alerte SIEM (écriture Modbus hors IHM, dépôt de programme, connexion hors fenêtre) ou écart entre mesure procédé et modèle attendu</td><td>Qualification de l'alerte par l'astreinte, vérification croisée avec le capteur indépendant</td><td>Astreinte exploitation</td><td class="num">&lt; 15 min</td></tr>
+        <tr><td><strong>Qualification</strong></td><td>Alerte confirmée</td><td>Ouverture de la cellule de crise, gel des modifications, préservation des journaux et d'une capture réseau</td><td>Responsable SSI + chef de quart</td><td class="num">&lt; 30 min</td></tr>
+        <tr><td><strong>Confinement</strong></td><td>Compromission avérée</td><td>Coupure du conduit supervision → automate, isolement de la zone concernée, passage en <strong>conduite locale</strong>&nbsp;; la barrière SIL 2 reste active et indépendante</td><td>Chef de quart</td><td class="num">&lt; 1 h</td></tr>
+        <tr><td><strong>Éradication</strong></td><td>Périmètre établi</td><td>Restauration du programme automate depuis la sauvegarde hors ligne après vérification d'empreinte, réinitialisation des secrets, reconstruction des postes compromis</td><td>Équipe automatisme + prestataire</td><td class="num">&lt; 4 h</td></tr>
+        <tr><td><strong>Reprise</strong></td><td>Environnement sain</td><td>Essais de bon fonctionnement, redémarrage progressif selon la procédure de démarrage à froid, surveillance renforcée pendant 72 h</td><td>Exploitation</td><td class="num">&lt; 8 h</td></tr>
+        <tr><td><strong>Retour d'expérience</strong></td><td>Procédé stabilisé</td><td>Analyse de la chaîne d'attaque, mise à jour des règles de filtrage et de détection, déclaration réglementaire</td><td>Responsable SSI</td><td class="num">&lt; 5 j</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col">
+    <h3>Modes dégradés prévus</h3>
+    <ul>
+      <li><strong>Conduite locale</strong> — pilotage depuis les coffrets en salle de contrôle, réseau de supervision débranché. L'usine produit en capacité réduite plutôt que de s'arrêter&nbsp;: chaque heure ainsi préservée vaut 6 500 €.</li>
+      <li><strong>Repli sûr automatique</strong> — la barrière SIL 2 met le réacteur en position de sécurité sans intervention humaine et sans dépendance au réseau.</li>
+      <li><strong>Supervision de secours</strong> — poste opérateur hors domaine, avec la dernière configuration IHM validée, stocké hors ligne.</li>
+    </ul>
+
+    <h3>Sauvegardes et points de retour</h3>
+    <ul class="tight">
+      <li>Programme automate signé et empreinte SHA-256 conservés hors ligne, vérifiés à chaque modification (objectif de perte de données&nbsp;: la dernière version validée).</li>
+      <li>Configuration IHM, règles de pare-feu et images système en trois exemplaires, dont un hors site et un hors ligne.</li>
+      <li>Test de restauration complet deux fois par an, chronométré, sur le jumeau numérique.</li>
+    </ul>
+
+    <h3>Obligations et parties prenantes</h3>
+    <p>Un incident affectant la conduite du procédé relève d'une déclaration au régulateur national dans les délais prévus par la directive <strong>NIS 2</strong> pour les entités concernées (alerte précoce sous 24 h, notification sous 72 h). La cellule de crise intègre&nbsp;: direction d'usine, responsable SSI, responsable HSE, intégrateur automatisme, assureur, et le cas échéant l'autorité compétente. La liste de contacts est maintenue hors ligne, sur support papier, en salle de contrôle — elle doit rester lisible quand le système d'information ne l'est plus.</p>
+  </div>
+</section>
+
+<section class="col">
+  <div class="sec-head"><span class="sec-num">§8</span><h2>Synthèse</h2></div>
+  <p>L'installation part de zéro&nbsp;: pare-feu ouvert, identifiants d'origine, protocole de commande sans authentification, aucune détection, aucune barrière physique indépendante. La chaîne d'attaque rejouée en TP n'a exigé ni faille logicielle inédite, ni compétence rare.</p>
+  <p>C'est aussi ce qui rend le redressement accessible&nbsp;: <strong>17 850 €</strong> et deux semaines suffisent à couper cette chaîne et à porter l'installation au niveau SL 2, celui qui correspond au profil d'attaquant rencontré. Les lots suivants portent la zone de contrôle à SL 3 et, surtout, réintroduisent une sécurité <em>physique</em> que la compromission du numérique ne peut pas annuler.</p>
+  <p>La question posée à la direction n'est donc pas « faut-il dépenser 222 570 €&nbsp;? » mais « accepte-t-on de rester exposé à un arrêt de 468 000 € que quatre jours de travail bien ciblés rendent improbable&nbsp;? ».</p>
+</section>
+
+<footer>
+  ECAM 5N — Promotion 2027 · Projet encadré de cybersécurité industrielle · Dossier technique<br>
+  Environnement d'étude : GRFICSv3 (Fortiphyd Logic) · Référentiels : IEC 62443-3-2, IEC 62443-3-3, IEC 61511, MITRE ATT&amp;CK for ICS
+</footer>
+
+</div>
