@@ -245,6 +245,25 @@
     <div><b>SL 4</b><span>Attaquant disposant de moyens étendus et de ressources d'État.</span></div>
   </div>
   <p>Le mode opératoire du TP — distribution Kali standard, identifiants par défaut, bibliothèque Modbus publique, plugin OT de Caldera — correspond exactement au profil <strong>SL 2</strong>. Or l'installation n'oppose aujourd'hui <strong>aucune</strong> contre-mesure : elle se situe au niveau <strong>SL 0</strong>. L'écart à combler est donc, au minimum, de SL 0 à SL 2 partout, et de SL 0 à <strong>SL 3</strong> sur la zone de contrôle, qui commande directement un procédé dangereux.</p>
+
+  <p class="note">Chaque niveau se décline sur quatre axes définis par la norme : le <b>SL-T</b> (target, ce que l'on vise, issu de l'analyse de risque), le <b>SL-C</b> (capability, ce que le composant sait faire), le <b>SL-A</b> (achieved, ce qui est réellement atteint une fois installé) et le <b>SL 0</b> (aucune exigence). Le durcissement consiste à faire converger SL-A vers SL-T, zone par zone.</p>
+
+  <h3>Les 7 exigences fondamentales (Foundational Requirements)</h3>
+  <p>L'IEC 62443-3-3 décline chaque niveau de sécurité en sept familles d'exigences. Elles servent de grille de lecture aux correctifs du §5.</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>FR</th><th>Exigence fondamentale</th><th>Ce qu'elle impose ici</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">FR 1</td><td>Contrôle d'identification &amp; d'authentification (IAC)</td><td>Comptes nominatifs, mots de passe forts, MFA sur l'administration</td></tr>
+        <tr><td class="mono">FR 2</td><td>Contrôle d'usage (UC)</td><td>Droits par rôle, dépôt de programme automate restreint et tracé</td></tr>
+        <tr><td class="mono">FR 3</td><td>Intégrité du système (SI)</td><td>Signature du code automate, inspection Modbus, anti-usurpation ARP</td></tr>
+        <tr><td class="mono">FR 4</td><td>Confidentialité des données (DC)</td><td>TLS interne, fin du HTTP et du Modbus en clair sur les conduits sensibles</td></tr>
+        <tr><td class="mono">FR 5</td><td>Restriction des flux (RDF)</td><td>Zones &amp; conduits, pare-feu en refus par défaut, suppression du réseau d'admin hors bande</td></tr>
+        <tr><td class="mono">FR 6</td><td>Réponse aux événements (TRE)</td><td>IDS Suricata paramétré, SIEM Wazuh, journalisation centralisée</td></tr>
+        <tr><td class="mono">FR 7</td><td>Disponibilité des ressources (RA)</td><td>Sauvegardes hors ligne, PRA testé, barrière SIL 2 indépendante</td></tr>
+      </tbody>
+    </table>
+  </div>
 </section>
 
 <section>
@@ -611,6 +630,64 @@
     </article>
 
   </div>
+
+  <h3 class="col">Classification physique / logique / logicielle</h3>
+  <div class="col"><p>Les treize vulnérabilités se rangent en trois familles, qui appellent des correctifs de nature différente : la sensibilisation pour le physique, l'architecture réseau pour le logique, le durcissement des composants pour le logiciel.</p></div>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Famille</th><th>Réf</th><th>Vulnérabilité</th><th>Correctif type</th><th>SL visé</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="2" style="background:var(--signal-soft);font-family:var(--sans);font-weight:600;color:var(--signal);vertical-align:middle">Physique</td><td class="mono">V13</td><td>Porte de zone calée par un parpaing, badge/carte d'accès laissés traîner, armoire électrique ouverte, fontaine près du local technique</td><td>Politique d'accès, contrôle des portes anti-maintien-ouvert, verrouillage des armoires, audit de site périodique</td><td class="mono">SL 1-2</td></tr>
+        <tr><td class="mono">V13</td><td>Mots de passe sur post-it, recette/secrets jetés dans une poubelle</td><td><b>Formation &amp; sensibilisation</b> (affiches, charte, « clean desk »), coffre-fort de secrets, destruction sécurisée des documents</td><td class="mono">SL 1</td></tr>
+        <tr><td rowspan="3" style="background:var(--accent-soft);font-family:var(--sans);font-weight:600;color:var(--accent);vertical-align:middle">Logique<br><span style="font-weight:400;font-size:11px;color:var(--ink-faint)">(réseau)</span></td><td class="mono">V1</td><td>Pare-feu ouvert (« allow all »), zones à plat</td><td>Refus par défaut, zones &amp; conduits, une règle par flux</td><td class="mono">SL 2-3</td></tr>
+        <tr><td class="mono">V5</td><td>Usurpation ARP / homme du milieu (TP1)</td><td><b>Voir l'encadré ci-dessous</b> — DAI, port-security, 802.1X</td><td class="mono">SL 3</td></tr>
+        <tr><td class="mono">V3&nbsp;·&nbsp;V10</td><td>Modbus non authentifié, réseau d'administration hors bande, accès à l'hyperviseur</td><td>Pare-feu à inspection Modbus, segmentation cellule, suppression du canal hors bande</td><td class="mono">SL 3</td></tr>
+        <tr><td rowspan="3" style="background:var(--critical-soft);font-family:var(--sans);font-weight:600;color:var(--critical);vertical-align:middle">Logicielle<br><span style="font-weight:400;font-size:11px;color:var(--ink-faint)">(hôtes)</span></td><td class="mono">V2&nbsp;·&nbsp;V6</td><td>Identifiants par défaut, administration en clair (HTTP/VNC)</td><td>Comptes nominatifs + MFA, TLS interne, désactivation de HTTP</td><td class="mono">SL 2</td></tr>
+        <tr><td class="mono">V4</td><td>Dépôt de programme automate non contrôlé</td><td>Programme signé, empreinte vérifiée, interface d'ingénierie fermée en exploitation</td><td class="mono">SL 3</td></tr>
+        <tr><td class="mono">V7&nbsp;·&nbsp;V8&nbsp;·&nbsp;V9&nbsp;·&nbsp;V11</td><td>IDS aveugle, journalisation absente, composants en fin de vie, outils offensifs sur site</td><td>Suricata + SIEM, gestion des correctifs, inventaire et retrait des outils</td><td class="mono">SL 2</td></tr>
+        <tr><td style="background:var(--safe-soft);font-family:var(--sans);font-weight:600;color:var(--safe);vertical-align:middle">Sûreté</td><td class="mono">V12</td><td>Aucune barrière de sécurité indépendante du système de conduite</td><td>Automate de sécurité SIL 2, interlock câblé, organe de décharge (IEC 61511)</td><td class="mono">SL 3</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="col">Les 9 vulnérabilités physiques relevées sur site</h3>
+  <div class="col"><p>Relevées à l'identique par les trois binômes lors de la visite de l'usine (V13). Elles ne coûtent presque rien à corriger et constituent la première ligne de défense : sans elles, tout l'effort logique et logiciel peut être contourné en quelques minutes d'accès physique.</p></div>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>#</th><th>Vulnérabilité constatée</th><th>Correctif proposé</th><th>Nature</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Porte sécurisée par lecteur de carte, maintenue ouverte par un parpaing</td><td>Capteur de porte maintenue ouverte + alarme, ferme-porte, <b>sensibilisation</b> (ne jamais caler une porte)</td><td class="mono">Organisation</td></tr>
+        <tr><td class="num">2</td><td>Mot de passe affiché sur un post-it</td><td>Coffre-fort de secrets (gestionnaire de mots de passe), politique « clean desk », <b>affiches de rappel</b></td><td class="mono">Organisation</td></tr>
+        <tr><td class="num">3</td><td>Second mot de passe sur post-it</td><td>Idem : proscrire tout secret sur papier, rotation des mots de passe exposés</td><td class="mono">Organisation</td></tr>
+        <tr><td class="num">4</td><td>Carte d'accès (badge) laissée sur le bureau</td><td>Port du badge obligatoire et personnel, ne jamais le laisser sans surveillance, désactivation immédiate en cas de perte</td><td class="mono">Organisation</td></tr>
+        <tr><td class="num">5</td><td>Routeur en libre accès</td><td>Armoire réseau verrouillée, désactivation des ports inutilisés, <b>port-security</b> sur les ports actifs</td><td class="mono">Physique</td></tr>
+        <tr><td class="num">6</td><td>Automate (PLC) laissé ouvert / accessible</td><td>Armoire automate verrouillée à clé, commutateur RUN/PROG physique, accès en zone contrôlée</td><td class="mono">Physique</td></tr>
+        <tr><td class="num">7</td><td>IHM utilisable sans authentification</td><td>Verrouillage de session automatique, authentification obligatoire, écran en zone à accès restreint</td><td class="mono">Logiciel</td></tr>
+        <tr><td class="num">8</td><td>Recette (procédé) non détruite, jetée dans la corbeille</td><td>Destruction sécurisée (broyeur), politique de gestion documentaire, marquage « confidentiel »</td><td class="mono">Organisation</td></tr>
+        <tr><td class="num">9</td><td>Fontaine à eau à côté de l'automate</td><td>Éloigner tout liquide des équipements électriques, règles d'implantation, bac de rétention</td><td class="mono">Sécurité</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout col">
+    <h4>Le correctif transverse : formation et sensibilisation</h4>
+    <p>Huit des neuf points relèvent du comportement, pas de la technique. La mesure la plus efficace et la moins chère est donc un programme de sensibilisation : affiches en zone, charte de sécurité signée, exercices réguliers, et intégration de ces règles à l'accueil des nouveaux arrivants. C'est le correctif C17, au meilleur rapport coût/efficacité de tout le plan pour la couche physique.</p>
+  </div>
+
+  <h3 class="col">Focus : empêcher l'usurpation ARP et l'homme du milieu (V5)</h3>
+  <div class="callout col">
+    <h4>Le problème observé au TP</h4>
+    <p>Sur un réseau commuté « à plat », n'importe quelle machine peut envoyer de fausses réponses ARP (<code>arpspoof</code>) pour se faire passer pour la passerelle ou pour l'automate. Le trafic Modbus IHM↔automate transite alors par le poste attaquant, qui peut le lire (Wireshark) et le réécrire. Aucune de ces techniques n'exploite une faille : elles abusent d'un protocole (ARP) sans authentification.</p>
+    <h4 style="margin-top:.7em">Les contre-mesures, de la plus simple à la plus robuste</h4>
+    <ul class="tight">
+      <li><strong>Dynamic ARP Inspection (DAI)</strong> sur les commutateurs — chaque réponse ARP est vérifiée contre la table DHCP snooping&nbsp;; les réponses forgées sont rejetées. <em>C'est la parade directe à l'arpspoof.</em></li>
+      <li><strong>Port security / sticky MAC</strong> — un port ne laisse passer qu'une adresse MAC apprise&nbsp;; brancher un équipement pirate (le « routeur perso » du TP) coupe le port.</li>
+      <li><strong>802.1X</strong> — authentification de l'équipement avant tout accès au réseau&nbsp;; une machine non enrôlée ne parle à personne.</li>
+      <li><strong>Entrées ARP statiques</strong> sur les liens critiques peu nombreux (IHM↔automate) — simple, robuste, mais à maintenir manuellement.</li>
+      <li><strong>Segmentation en VLAN / conduits</strong> — réduit le domaine de diffusion&nbsp;: un attaquant en DMZ ne peut plus usurper un équipement de la cellule.</li>
+      <li><strong>Protocoles authentifiés</strong> — à terme, Modbus/TCP Security (TLS) ou OPC UA signé rendent la réécriture des trames inopérante, même si l'interception réussit.</li>
+    </ul>
+    <p style="margin-bottom:0">Combinées, DAI + port-security + 802.1X ferment la quasi-totalité des attaques de niveau 2 vues en TP1, et sont portées par les commutateurs industriels du correctif C13.</p>
+  </div>
 </section>
 
 <section>
@@ -798,6 +875,110 @@
       </tbody>
     </table>
   </div>
+
+  <h3 class="col">Vue « après » — l'architecture initiale, corrigée</h3>
+  <div class="col"><p>La même installation que la planche 1, correctif par correctif, pour comparer l'avant et l'après d'un seul regard. Les blocs verts sont les mesures ajoutées.</p></div>
+  <figure>
+    <div class="planche">
+      <svg viewBox="0 0 1000 640" role="img" aria-label="Architecture finale calquée sur l'architecture initiale, avec les correctifs ajoutés.">
+        <style>
+          .z2-lbl{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;font-weight:600}
+          .z2-note{font-family:var(--mono);font-size:10.5px;fill:var(--ink-faint)}
+          .n2-t{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--ink)}
+          .n2-ip{font-family:var(--mono);font-size:10px;fill:var(--accent)}
+          .n2-s{font-family:var(--mono);font-size:10px;fill:var(--safe)}
+          .f2-lbl{font-family:var(--mono);font-size:10px;fill:var(--ink-soft)}
+          .f2-ok{font-family:var(--mono);font-size:10.5px;fill:var(--safe);font-weight:500}
+        </style>
+        <defs>
+          <marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--safe)"/>
+          </marker>
+        </defs>
+
+        <!-- bandeau admin supprimé -->
+        <rect x="30" y="14" width="940" height="34" fill="var(--safe-soft)" stroke="var(--safe)" stroke-dasharray="5 4"/>
+        <text x="46" y="35" class="z2-note" fill="var(--safe)">RÉSEAU D'ADMINISTRATION HORS BANDE — SUPPRIMÉ · toute administration passe désormais par le bastion (MFA, sessions enregistrées)</text>
+
+        <!-- DMZ -->
+        <rect x="30" y="66" width="940" height="168" fill="none" stroke="var(--signal)" stroke-width="1.5"/>
+        <rect x="30" y="66" width="940" height="24" fill="var(--signal-soft)"/>
+        <text x="44" y="83" class="z2-lbl" fill="var(--signal)">ZONE DMZ — 192.168.90.0/24 · SL 2</text>
+        <text x="966" y="83" class="z2-note" text-anchor="end">outils offensifs retirés · SIEM ajouté</text>
+        <g>
+          <rect x="46" y="104" width="290" height="118" fill="var(--surface)" stroke="var(--safe)"/>
+          <text x="58" y="125" class="n2-t">Bastion d'administration</text>
+          <text x="58" y="143" class="n2-s">+ MFA, comptes nominatifs</text>
+          <text x="58" y="160" class="n2-s">+ enregistrement des sessions</text>
+          <text x="58" y="184" class="n2-s">seul point d'entrée admin</text>
+          <text x="58" y="208" class="f2-ok">remplace les accès HTTP directs</text>
+        </g>
+        <g>
+          <rect x="356" y="104" width="290" height="118" fill="var(--surface)" stroke="var(--safe)"/>
+          <text x="368" y="125" class="n2-t">Historian / relais OPC UA</text>
+          <text x="368" y="143" class="n2-s">+ rupture de protocole</text>
+          <text x="368" y="160" class="n2-s">+ lecture seule vers l'IT</text>
+          <text x="368" y="208" class="f2-ok">expose les données sans exposer l'OT</text>
+        </g>
+        <g>
+          <rect x="666" y="104" width="300" height="118" fill="var(--surface)" stroke="var(--safe)"/>
+          <text x="678" y="125" class="n2-t">SIEM Wazuh</text>
+          <text x="678" y="143" class="n2-s">+ agents sur tous les actifs</text>
+          <text x="678" y="160" class="n2-s">+ alertes OT, NTP interne</text>
+          <text x="678" y="208" class="f2-ok">Kali &amp; Caldera retirés du réseau</text>
+        </g>
+
+        <!-- PARE-FEU corrigé -->
+        <rect x="30" y="262" width="940" height="78" fill="var(--safe-soft)" stroke="var(--safe)" stroke-width="1.5"/>
+        <text x="46" y="286" class="z2-lbl" fill="var(--safe)">PARE-FEU — REFUS PAR DÉFAUT + IDS SURICATA (zone OT surveillée)</text>
+        <text x="46" y="308" class="f2-ok">FORWARD : DROP par défaut · une règle explicite par conduit · règle « allow all » supprimée · admin en HTTPS, mot de passe fort + MFA</text>
+        <text x="46" y="326" class="f2-lbl">Conduit IHM→automate en inspection Modbus : FC 3/4 lecture, FC 6/16 bornés · toute écriture hors IHM = alerte SIEM</text>
+
+        <!-- ICS -->
+        <rect x="30" y="368" width="940" height="238" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+        <rect x="30" y="368" width="940" height="24" fill="var(--accent-soft)"/>
+        <text x="44" y="385" class="z2-lbl" fill="var(--accent)">ZONE PROCÉDÉ / ICS — segmentée en cellules · SL 3</text>
+        <text x="966" y="385" class="z2-note" text-anchor="end">DAI · port-security · 802.1X sur les commutateurs</text>
+        <g>
+          <rect x="46" y="404" width="290" height="120" fill="var(--surface)" stroke="var(--safe)"/>
+          <text x="58" y="425" class="n2-t">Automate OpenPLC durci</text>
+          <text x="58" y="443" class="n2-ip">192.168.95.2</text>
+          <text x="58" y="461" class="n2-s">+ programme signé, empreinte vérifiée</text>
+          <text x="58" y="478" class="n2-s">+ web d'ingénierie fermé en exploit.</text>
+          <text x="58" y="495" class="n2-s">+ comptes nominatifs, OS à jour</text>
+          <text x="58" y="516" class="f2-ok">dépôt de code impossible à distance</text>
+        </g>
+        <g>
+          <rect x="356" y="404" width="290" height="120" fill="var(--surface)" stroke="var(--safe)"/>
+          <text x="368" y="425" class="n2-t">Poste d'ingénierie</text>
+          <text x="368" y="443" class="n2-ip">accès via bastion</text>
+          <text x="368" y="461" class="n2-s">+ VNC/HTTP chiffrés</text>
+          <text x="368" y="478" class="n2-s">+ fenêtre de maintenance déclarée</text>
+          <text x="368" y="516" class="f2-ok">plus d'accès noVNC ouvert</text>
+        </g>
+        <g>
+          <rect x="666" y="404" width="300" height="120" fill="var(--safe-soft)" stroke="var(--safe)" stroke-width="1.5"/>
+          <text x="678" y="425" class="n2-t" fill="var(--safe)">BARRIÈRE DE SÉCURITÉ SIL 2</text>
+          <text x="678" y="443" class="n2-s">capteur de pression indépendant</text>
+          <text x="678" y="461" class="n2-s">automate de sécurité + interlock câblé</text>
+          <text x="678" y="478" class="n2-s">organe de décharge mécanique</text>
+          <text x="678" y="512" class="f2-ok">met le procédé en repli même si</text>
+          <text x="678" y="528" class="f2-ok">l'automate est compromis</text>
+        </g>
+        <text x="46" y="556" class="n2-s">E/S déportées .95.10→.15 (réacteur .95.14) : segment cellule isolé, ports verrouillés par adresse MAC.</text>
+        <text x="46" y="574" class="f2-lbl">Modbus/TCP 502 conservé mais confiné au conduit automate↔E/S et inspecté ; usurpation ARP bloquée par DAI + 802.1X.</text>
+
+        <!-- flux verts autorisés -->
+        <line x1="150" y1="222" x2="150" y2="262" stroke="var(--safe)" stroke-width="1.4" marker-end="url(#arg)"/>
+        <line x1="150" y1="340" x2="150" y2="404" stroke="var(--safe)" stroke-width="1.4" marker-end="url(#arg)"/>
+        <text x="162" y="246" class="f2-ok">flux autorisé, inspecté et journalisé</text>
+      </svg>
+    </div>
+    <figcaption>
+      <b>Planche 3 — Architecture finale, en miroir de la planche 1.</b>
+      Même disposition (DMZ · pare-feu · ICS) pour la comparaison directe. En vert, les correctifs ajoutés&nbsp;: bastion + MFA, SIEM, pare-feu en refus par défaut avec inspection Modbus, IDS étendu à l'OT, automate durci et signé, segmentation par cellules (DAI/802.1X), et la barrière de sécurité SIL 2 indépendante. Le réseau d'administration hors bande a disparu.
+    </figcaption>
+  </figure>
 </section>
 
 <section>
@@ -865,6 +1046,27 @@
       <tfoot><tr><td colspan="6">Sous-total lot 2</td><td class="num">11 h</td><td class="num">167 480 €</td></tr></tfoot>
     </table>
   </div>
+
+  <h3 class="col">Matrice facilité × coût × efficacité</h3>
+  <div class="col"><p>Pour arbitrer, chaque correctif est noté sur trois axes : la <b>facilité</b> de mise en place (rapidité, absence d'arrêt, compétences requises), le <b>coût</b> complet, et l'<b>efficacité</b> sur la chaîne d'attaque réelle. Les mesures en haut du tableau — faciles, peu coûteuses, très efficaces — sont les « quick wins » à faire immédiatement.</p></div>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Réf</th><th>Correctif</th><th class="num">Facilité</th><th class="num">Coût</th><th class="num">Efficacité</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">C4</td><td>Paramétrage de l'IDS (variable Modbus, zone OT)</td><td class="num" style="color:var(--safe)">●●●</td><td class="num" style="color:var(--safe)">●○○</td><td class="num" style="color:var(--safe)">●●●</td><td><span class="badge" style="border-color:var(--safe);color:var(--safe)">quick win</span></td></tr>
+        <tr><td class="mono">C2</td><td>Éradication des mots de passe par défaut</td><td class="num" style="color:var(--safe)">●●●</td><td class="num" style="color:var(--safe)">●○○</td><td class="num" style="color:var(--safe)">●●●</td><td><span class="badge" style="border-color:var(--safe);color:var(--safe)">quick win</span></td></tr>
+        <tr><td class="mono">C1</td><td>Pare-feu en refus par défaut</td><td class="num" style="color:var(--signal)">●●○</td><td class="num" style="color:var(--safe)">●○○</td><td class="num" style="color:var(--safe)">●●●</td><td><span class="badge" style="border-color:var(--safe);color:var(--safe)">quick win</span></td></tr>
+        <tr><td class="mono">C3</td><td>Retrait des outils offensifs (Kali, Caldera)</td><td class="num" style="color:var(--safe)">●●●</td><td class="num" style="color:var(--safe)">●○○</td><td class="num" style="color:var(--signal)">●●○</td><td><span class="badge" style="border-color:var(--safe);color:var(--safe)">quick win</span></td></tr>
+        <tr><td class="mono">C5</td><td>SIEM Wazuh + agents + alertes OT</td><td class="num" style="color:var(--signal)">●●○</td><td class="num" style="color:var(--signal)">●●○</td><td class="num" style="color:var(--safe)">●●●</td><td><span class="badge" style="border-color:var(--signal);color:var(--signal)">prioritaire</span></td></tr>
+        <tr><td class="mono">C17</td><td>Formation &amp; sensibilisation (vulns physiques)</td><td class="num" style="color:var(--safe)">●●●</td><td class="num" style="color:var(--signal)">●●○</td><td class="num" style="color:var(--signal)">●●○</td><td><span class="badge" style="border-color:var(--signal);color:var(--signal)">prioritaire</span></td></tr>
+        <tr><td class="mono">C7·C8</td><td>Bastion + MFA, TLS interne</td><td class="num" style="color:var(--signal)">●●○</td><td class="num" style="color:var(--signal)">●●○</td><td class="num" style="color:var(--safe)">●●●</td><td><span class="badge" style="border-color:var(--signal);color:var(--signal)">prioritaire</span></td></tr>
+        <tr><td class="mono">C13</td><td>Re-segmentation physique (DAI, 802.1X)</td><td class="num" style="color:var(--critical)">●○○</td><td class="num" style="color:var(--critical)">●●●</td><td class="num" style="color:var(--safe)">●●●</td><td><span class="badge" style="border-color:var(--accent);color:var(--accent)">structurel</span></td></tr>
+        <tr><td class="mono">C14</td><td>Pare-feu industriel à inspection Modbus</td><td class="num" style="color:var(--critical)">●○○</td><td class="num" style="color:var(--critical)">●●●</td><td class="num" style="color:var(--safe)">●●●</td><td><span class="badge" style="border-color:var(--accent);color:var(--accent)">structurel</span></td></tr>
+        <tr><td class="mono">C15</td><td>Barrière de sécurité SIL 2 indépendante</td><td class="num" style="color:var(--critical)">●○○</td><td class="num" style="color:var(--critical)">●●●</td><td class="num" style="color:var(--safe)">●●●</td><td><span class="badge sev" style="background:var(--critical);border-color:var(--critical)">incontournable</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note col">Lecture : ●●● facile / peu coûteux / très efficace — ●○○ difficile / coûteux / peu efficace. Le coût élevé de C15 (barrière SIL 2) est assumé : c'est la seule mesure qui protège le procédé <em>même si tout le numérique est compromis</em>. Les quick wins, eux, offrent le meilleur rapport et n'exigent presque aucun arrêt.</p>
 
   <div class="callout money col">
     <h4>Lecture économique</h4>
