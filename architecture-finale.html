@@ -11,6 +11,7 @@
     --signal:#A96A0C; --signal-soft:#F7EEDF;
     --critical:#9E2A2A; --critical-soft:#F6E6E4;
     --safe:#2C6B50; --safe-soft:#E3EFE8;
+    --process:#5A3B8B; --process-soft:#EEE8F5;
     --sans:"IBM Plex Sans Condensed",-apple-system,"Segoe UI",sans-serif;
     --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
     --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
@@ -24,6 +25,7 @@
       --signal:#DFA548; --signal-soft:#332815;
       --critical:#E0776F; --critical-soft:#361D1C;
       --safe:#6FBF95; --safe-soft:#16301F;
+      --process:#B79BE0; --process-soft:#251B39;
     }
   }
   :root[data-theme="dark"]{
@@ -34,6 +36,7 @@
     --signal:#DFA548; --signal-soft:#332815;
     --critical:#E0776F; --critical-soft:#361D1C;
     --safe:#6FBF95; --safe-soft:#16301F;
+    --process:#B79BE0; --process-soft:#251B39;
   }
   *{box-sizing:border-box}
   body{background:var(--ground);color:var(--ink);font-family:var(--serif);font-size:16.5px;line-height:1.6;margin:0;padding-inline:20px;padding-block:0 72px}
@@ -46,37 +49,26 @@
   h1{font-family:var(--sans);font-weight:700;font-size:clamp(30px,5.5vw,50px);line-height:1.03;letter-spacing:-.015em;margin:0 0 12px;text-wrap:balance}
   .standfirst{font-size:19px;color:var(--ink-soft);max-width:62ch;margin:0}
 
-  section{margin-block:42px}
-  .sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line-strong);padding-bottom:8px;margin-bottom:10px}
+  section{margin-block:40px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line-strong);padding-bottom:8px;margin-bottom:12px}
   .sec-num{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--safe);letter-spacing:.06em}
   h2{font-family:var(--sans);font-weight:700;font-size:clamp(22px,3.2vw,30px);letter-spacing:-.01em;margin:0;text-wrap:balance}
-  .sub{font-size:16px;color:var(--ink-soft);margin:0 0 16px}
 
-  figure{margin:20px 0 0}
+  figure{margin:8px 0 0}
   .planche{background:var(--surface);border:1px solid var(--line);padding:16px;overflow-x:auto}
   .planche svg{display:block;min-width:900px;width:100%;height:auto}
   figcaption{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);margin-top:10px;line-height:1.5}
-  figcaption b{color:var(--ink-soft);font-weight:600}
-  .legend{display:flex;flex-wrap:wrap;gap:8px 20px;font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-top:12px}
-  .legend span{display:inline-flex;align-items:center;gap:7px}
-  .legend i{width:22px;height:0;border-top-width:3px;border-top-style:solid;display:inline-block}
 
-  .table-scroll{overflow-x:auto;border:1px solid var(--line);background:var(--surface);margin-top:6px}
-  table{border-collapse:collapse;width:100%;min-width:600px;font-family:var(--sans);font-size:14.5px}
-  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-  thead th{background:var(--surface-2);font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;white-space:nowrap}
-  tbody tr:last-child td{border-bottom:none}
-  td.av{color:var(--critical)}
-  td.ap{color:var(--safe);font-family:var(--sans)}
-  code{font-family:var(--mono);font-size:.86em;background:var(--surface-2);padding:1px 4px;border-radius:2px;color:var(--accent)}
+  /* les 6 correctifs */
+  .fixes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+  @media (max-width:640px){.fixes{grid-template-columns:1fr}}
+  .fix{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--safe);padding:14px 16px}
+  .fix .num{width:30px;height:30px;border-radius:50%;background:var(--safe);color:#fff;font-family:var(--sans);font-weight:700;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .fix h4{font-family:var(--sans);font-size:16.5px;margin:2px 0 3px;color:var(--ink)}
+  .fix p{font-size:14.5px;color:var(--ink-soft);margin:0}
+  .fix .who{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);margin-top:4px;display:block}
 
-  .princ{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:6px}
-  @media (max-width:720px){.princ{grid-template-columns:1fr}}
-  .pr{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--safe);padding:14px 16px}
-  .pr h4{font-family:var(--sans);font-size:16px;margin:0 0 4px}
-  .pr p{font-size:14px;color:var(--ink-soft);margin:0}
-
-  .callout{border:1px solid var(--line);border-top:3px solid var(--safe);background:var(--surface);padding:15px 18px;margin-top:22px}
+  .callout{border:1px solid var(--line);border-top:3px solid var(--safe);background:var(--surface);padding:15px 18px;margin-top:26px}
   .callout h4{font-family:var(--sans);font-size:17px;margin:0 0 6px}
   .callout p:last-child{margin-bottom:0}
   footer{border-top:1px solid var(--line-strong);margin-top:46px;padding-top:16px;font-family:var(--mono);font-size:11.5px;color:var(--ink-faint)}
@@ -87,151 +79,182 @@
 
 <header class="mast">
   <div class="kicker"><span>ECAM 5N — 2027</span><span>Cybersécurité industrielle</span><span>Partie 4/4 — Architecture finale</span></div>
-  <h1>L'usine GRFICS, durcie</h1>
-  <p class="standfirst">La même installation qu'en partie 1, correctif par correctif. On garde la disposition (DMZ · pare-feu · ICS) pour comparer d'un coup d'œil : en vert, tout ce qui a été ajouté ou corrigé.</p>
+  <h1>La même usine, avec 6 protections</h1>
+  <p class="standfirst">C'est exactement le schéma de la partie 1 : rien n'a bougé. On a juste ajouté <strong>6 correctifs</strong>, repérés par les pastilles vertes ❶ à ❻. Chacun est expliqué juste en dessous.</p>
 </header>
 
 <section>
   <div class="sec-head"><span class="sec-num">▸</span><h2>Schéma final</h2></div>
   <figure>
     <div class="planche">
-      <svg viewBox="0 0 1000 660" role="img" aria-label="Architecture finale durcie de l'usine GRFICS, en miroir de l'architecture initiale.">
+      <svg viewBox="0 0 1000 720" role="img" aria-label="Architecture finale : le schéma initial avec 6 correctifs numérotés en vert.">
         <defs>
-          <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--safe)"/></marker>
-          <marker id="ags" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M10,0 L0,5 L10,10 z" fill="var(--safe)"/></marker>
+          <marker id="a-ctrl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker>
+          <marker id="a-proc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--process)"/></marker>
+          <marker id="a-ctrl-s" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M10,0 L0,5 L10,10 z" fill="var(--accent)"/></marker>
         </defs>
         <style>
           .zt{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;font-weight:600}
           .zn{font-family:var(--mono);font-size:10px;fill:var(--ink-faint)}
-          .nt{font-family:var(--sans);font-size:13px;font-weight:600;fill:var(--ink)}
-          .nip{font-family:var(--mono);font-size:10px;fill:var(--accent)}
-          .ok{font-family:var(--mono);font-size:10px;fill:var(--safe)}
-          .fl{font-family:var(--mono);font-size:10px;fill:var(--safe)}
+          .nt{font-family:var(--sans);font-size:13.5px;font-weight:600;fill:var(--ink)}
+          .nip{font-family:var(--mono);font-size:10.5px;fill:var(--accent)}
+          .ns{font-family:var(--mono);font-size:10px;fill:var(--ink-soft)}
+          .role{font-family:var(--mono);font-size:9.5px;fill:var(--ink-faint)}
+          .fl{font-family:var(--mono);font-size:10px;fill:var(--accent)}
+          .flp{font-family:var(--mono);font-size:10px;fill:var(--process)}
+          .pin{font-family:var(--sans);font-size:15px;font-weight:700;fill:#fff}
         </style>
 
-        <!-- admin bridge removed -->
-        <rect x="30" y="12" width="940" height="30" fill="var(--safe-soft)" stroke="var(--safe)" stroke-dasharray="5 4"/>
-        <text x="46" y="31" class="zn" fill="var(--safe)">RÉSEAU D'ADMINISTRATION HORS BANDE — SUPPRIMÉ · toute administration passe par le bastion (MFA, sessions enregistrées)</text>
+        <!-- admin bridge -->
+        <rect x="30" y="12" width="940" height="30" fill="var(--surface-2)" stroke="var(--line-strong)" stroke-dasharray="5 4"/>
+        <text x="46" y="31" class="zn" fill="var(--ink-soft)">RÉSEAU D'ADMINISTRATION — bridge Docker « a-grfics-admin » : relie tous les hôtes, en dehors du pare-feu</text>
 
         <!-- DMZ zone -->
-        <rect x="30" y="58" width="940" height="170" fill="none" stroke="var(--signal)" stroke-width="1.5"/>
-        <rect x="30" y="58" width="940" height="22" fill="var(--signal-soft)"/>
-        <text x="44" y="74" class="zt" fill="var(--signal)">ZONE DMZ — 192.168.90.0/24 · SL 2</text>
-        <text x="956" y="74" class="zn" text-anchor="end">outils offensifs retirés · SIEM ajouté</text>
+        <rect x="30" y="58" width="440" height="238" fill="none" stroke="var(--signal)" stroke-width="1.5"/>
+        <rect x="30" y="58" width="440" height="22" fill="var(--signal-soft)"/>
+        <text x="44" y="74" class="zt" fill="var(--signal)">ZONE BUREAUTIQUE / DMZ — 192.168.90.0/24</text>
 
-        <rect x="46" y="92" width="292" height="120" fill="var(--surface)" stroke="var(--safe)" stroke-width="1.5"/>
-        <text x="58" y="112" class="nt">Bastion d'administration</text>
-        <text x="58" y="130" class="ok">+ MFA, comptes nominatifs</text>
-        <text x="58" y="147" class="ok">+ sessions enregistrées</text>
-        <text x="58" y="171" class="zn">seul point d'entrée pour l'admin</text>
-        <text x="58" y="195" class="ok">remplace les accès HTTP directs</text>
+        <!-- HMI -->
+        <rect x="46" y="92" width="196" height="90" fill="var(--surface)" stroke="var(--line-strong)"/>
+        <text x="58" y="112" class="nt">IHM Scada-LTS</text>
+        <text x="58" y="129" class="nip">192.168.90.107</text>
+        <text x="58" y="146" class="ns">HTTP 8080 · Modbus/TCP</text>
+        <text x="58" y="162" class="ns">vues, alarmes, consignes</text>
+        <text x="58" y="177" class="role">rôle Modbus : MAÎTRE → automate</text>
 
-        <rect x="354" y="92" width="292" height="120" fill="var(--surface)" stroke="var(--safe)" stroke-width="1.5"/>
-        <text x="366" y="112" class="nt">Historian / relais OPC UA</text>
-        <text x="366" y="130" class="ok">+ rupture de protocole</text>
-        <text x="366" y="147" class="ok">+ lecture seule vers l'IT</text>
-        <text x="366" y="195" class="zn">expose les données, pas l'OT</text>
+        <!-- Kali -->
+        <rect x="256" y="92" width="198" height="42" fill="var(--surface)" stroke="var(--line-strong)"/>
+        <text x="268" y="110" class="nt">Poste Kali</text>
+        <text x="268" y="126" class="nip">192.168.90.6 · noVNC 6088</text>
+        <!-- Caldera -->
+        <rect x="256" y="142" width="198" height="40" fill="var(--surface)" stroke="var(--line-strong)"/>
+        <text x="268" y="160" class="nt">Caldera</text>
+        <text x="268" y="175" class="nip">192.168.90.250 · 8888</text>
+        <!-- barre "retirés" verte sur Kali+Caldera -->
+        <line x1="256" y1="92" x2="454" y2="182" stroke="var(--safe)" stroke-width="2"/>
 
-        <rect x="662" y="92" width="304" height="120" fill="var(--surface)" stroke="var(--safe)" stroke-width="1.5"/>
-        <text x="674" y="112" class="nt">SIEM Wazuh</text>
-        <text x="674" y="130" class="ok">+ agents sur tous les actifs</text>
-        <text x="674" y="147" class="ok">+ alertes OT · NTP interne</text>
-        <text x="674" y="195" class="zn">Kali &amp; Caldera retirés du réseau</text>
-
-        <!-- firewall band -->
-        <rect x="30" y="244" width="940" height="70" fill="var(--safe-soft)" stroke="var(--safe)" stroke-width="1.5"/>
-        <text x="500" y="266" class="zt" fill="var(--safe)" text-anchor="middle">PARE-FEU — REFUS PAR DÉFAUT · INSPECTION MODBUS · IDS SURICATA (zone OT surveillée)</text>
-        <text x="500" y="286" class="ok" text-anchor="middle">une règle par flux · FC 3/4 lecture, FC 6/16 consignes bornées · admin HTTPS + MFA</text>
-        <text x="500" y="303" class="zn" text-anchor="middle">toute écriture Modbus hors IHM → alerte SIEM · la règle « allow all » a disparu</text>
+        <text x="44" y="210" class="zn">Accès opérateur &amp; navigateurs · tout en HTTP</text>
+        <text x="44" y="278" class="zn" fill="var(--signal)">Passerelle DMZ : 192.168.90.200 (routeur)</text>
 
         <!-- ICS zone -->
-        <rect x="30" y="330" width="940" height="300" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
-        <rect x="30" y="330" width="940" height="22" fill="var(--accent-soft)"/>
-        <text x="44" y="346" class="zt" fill="var(--accent)">ZONE PROCÉDÉ / ICS — segmentée en cellules · SL 3</text>
-        <text x="956" y="346" class="zn" text-anchor="end">DAI · port-security · 802.1X</text>
+        <rect x="30" y="316" width="940" height="386" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+        <rect x="30" y="316" width="940" height="22" fill="var(--accent-soft)"/>
+        <text x="44" y="332" class="zt" fill="var(--accent)">ZONE PROCÉDÉ / ICS — 192.168.95.0/24</text>
+        <text x="956" y="332" class="zn" text-anchor="end">segmentée en cellules</text>
 
-        <rect x="46" y="366" width="292" height="120" fill="var(--surface)" stroke="var(--safe)" stroke-width="1.5"/>
-        <text x="58" y="386" class="nt">Automate OpenPLC durci</text>
-        <text x="58" y="404" class="nip">192.168.95.2</text>
-        <text x="58" y="422" class="ok">+ programme signé &amp; vérifié</text>
-        <text x="58" y="439" class="ok">+ web d'ingénierie fermé en exploit.</text>
-        <text x="58" y="456" class="ok">+ comptes nominatifs, OS à jour</text>
-        <text x="58" y="477" class="zn">dépôt de code impossible à distance</text>
+        <!-- PLC -->
+        <rect x="46" y="356" width="210" height="118" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="1.5"/>
+        <text x="58" y="377" class="nt">Automate OpenPLC</text>
+        <text x="58" y="394" class="nip">192.168.95.2</text>
+        <text x="58" y="411" class="ns">Modbus/TCP 502 · web 8080</text>
+        <text x="58" y="428" class="ns">exécute la régulation (ST)</text>
+        <text x="58" y="447" class="role">SERVEUR ← IHM</text>
+        <text x="58" y="462" class="role">MAÎTRE → E/S déportées</text>
 
-        <rect x="354" y="366" width="292" height="120" fill="var(--surface)" stroke="var(--safe)" stroke-width="1.5"/>
-        <text x="366" y="386" class="nt">Poste d'ingénierie</text>
-        <text x="366" y="404" class="nip">accès via bastion</text>
-        <text x="366" y="422" class="ok">+ VNC / HTTP chiffrés</text>
-        <text x="366" y="439" class="ok">+ fenêtre de maintenance déclarée</text>
-        <text x="366" y="477" class="zn">plus d'accès noVNC ouvert</text>
+        <!-- Engineering WS -->
+        <rect x="46" y="500" width="210" height="86" fill="var(--surface)" stroke="var(--line-strong)"/>
+        <text x="58" y="520" class="nt">Poste d'ingénierie</text>
+        <text x="58" y="537" class="nip">192.168.95.5</text>
+        <text x="58" y="554" class="ns">noVNC 6080 · OpenPLC Editor</text>
+        <text x="58" y="571" class="ns">dépose le programme (ST)</text>
 
-        <rect x="662" y="366" width="304" height="120" fill="var(--safe-soft)" stroke="var(--safe)" stroke-width="1.5"/>
-        <text x="674" y="386" class="nt" fill="var(--safe)">BARRIÈRE DE SÉCURITÉ SIL 2</text>
-        <text x="674" y="404" class="ok">capteur de pression indépendant</text>
-        <text x="674" y="421" class="ok">automate de sécurité + interlock câblé</text>
-        <text x="674" y="438" class="ok">organe de décharge mécanique</text>
-        <text x="674" y="462" class="zn" fill="var(--safe)">met le réacteur en repli même si</text>
-        <text x="674" y="476" class="zn" fill="var(--safe)">l'automate est compromis</text>
+        <!-- remote IO stack -->
+        <rect x="410" y="356" width="240" height="250" fill="var(--surface-2)" stroke="var(--line-strong)"/>
+        <text x="422" y="375" class="nt">Entrées / Sorties déportées</text>
+        <text x="422" y="391" class="ns">6 serveurs Modbus/TCP · port 502</text>
+        <g font-family="var(--mono)" font-size="10.5px">
+          <rect x="422" y="402" width="216" height="26" fill="var(--surface)" stroke="var(--line)"/><text x="430" y="419" class="ns">.95.10  Feed 1 — alimentation</text>
+          <rect x="422" y="430" width="216" height="26" fill="var(--surface)" stroke="var(--line)"/><text x="430" y="447" class="ns">.95.11  Feed 2 — alimentation</text>
+          <rect x="422" y="458" width="216" height="26" fill="var(--surface)" stroke="var(--line)"/><text x="430" y="475" class="ns">.95.12  Purge — vanne de purge</text>
+          <rect x="422" y="486" width="216" height="26" fill="var(--surface)" stroke="var(--line)"/><text x="430" y="503" class="ns">.95.13  Product — soutirage</text>
+          <rect x="422" y="514" width="216" height="26" fill="var(--critical-soft)" stroke="var(--critical)"/><text x="430" y="531" class="ns" fill="var(--critical)">.95.14  Réacteur — niveau &amp; pression</text>
+          <rect x="422" y="542" width="216" height="26" fill="var(--surface)" stroke="var(--line)"/><text x="430" y="559" class="ns">.95.15  Analyzer — composition</text>
+        </g>
+        <text x="422" y="592" class="role">segment cellule · ports verrouillés (MAC)</text>
 
-        <!-- remote IO / cellule -->
-        <rect x="46" y="506" width="600" height="104" fill="var(--surface-2)" stroke="var(--line-strong)"/>
-        <text x="58" y="526" class="nt">E/S déportées &amp; réacteur — segment cellule isolé</text>
-        <text x="58" y="544" class="nip">192.168.95.10 → .15 (réacteur .95.14)</text>
-        <text x="58" y="562" class="ok">+ ports commutateur verrouillés par adresse MAC (port-security)</text>
-        <text x="58" y="579" class="ok">+ usurpation ARP bloquée par DAI + 802.1X</text>
-        <text x="58" y="598" class="zn">Modbus 502 confiné au conduit automate ↔ E/S, inspecté</text>
+        <!-- Simulation -->
+        <rect x="720" y="356" width="234" height="140" fill="var(--surface)" stroke="var(--process)" stroke-width="1.5"/>
+        <text x="732" y="377" class="nt">Serveur de simulation</text>
+        <text x="732" y="394" class="nip" fill="var(--process)">192.168.95.45</text>
+        <text x="732" y="412" class="ns">modèle physique du réacteur</text>
+        <text x="732" y="429" class="ns">socket JSON — port 55555</text>
+        <text x="732" y="446" class="ns">visualisation 3D (HTTP 80)</text>
+        <text x="732" y="466" class="role">capteurs &amp; actionneurs simulés</text>
+        <text x="732" y="482" class="role">= le « monde physique »</text>
 
-        <rect x="662" y="506" width="304" height="104" fill="var(--process-soft, var(--surface-2))" stroke="var(--line-strong)"/>
-        <text x="674" y="526" class="nt">Serveur de simulation</text>
-        <text x="674" y="544" class="nip">192.168.95.45</text>
-        <text x="674" y="562" class="ok">+ accès à l'hyperviseur supprimé</text>
-        <text x="674" y="580" class="zn">le « monde physique » du procédé</text>
+        <!-- reactor mini schematic -->
+        <rect x="720" y="516" width="234" height="170" fill="var(--process-soft)" stroke="var(--process)"/>
+        <text x="732" y="535" class="zt" fill="var(--process)">LE PROCÉDÉ</text>
+        <rect x="812" y="556" width="52" height="80" rx="10" fill="var(--surface)" stroke="var(--process)" stroke-width="1.5"/>
+        <text x="838" y="600" class="ns" fill="var(--process)" text-anchor="middle" font-size="9.5">réacteur</text>
+        <text x="838" y="612" class="ns" fill="var(--process)" text-anchor="middle" font-size="9.5">(ballon)</text>
+        <line x1="748" y1="566" x2="812" y2="566" stroke="var(--process)" stroke-width="1.4" marker-end="url(#a-proc)"/>
+        <text x="742" y="563" class="flp" text-anchor="end" font-size="9">Feed 1/2</text>
+        <line x1="838" y1="556" x2="838" y2="540" stroke="var(--process)" stroke-width="1.4" marker-end="url(#a-proc)"/>
+        <text x="848" y="548" class="flp" font-size="9">purge (pression)</text>
+        <line x1="864" y1="620" x2="928" y2="620" stroke="var(--process)" stroke-width="1.4" marker-end="url(#a-proc)"/>
+        <text x="900" y="636" class="flp" text-anchor="middle" font-size="9">product</text>
+        <text x="732" y="668" class="role">+ alimentation ⇒ pression ↑</text>
+        <text x="732" y="681" class="role">+ purge ⇒ pression ↓</text>
 
-        <!-- authorized green flows -->
-        <line x1="150" y1="212" x2="150" y2="244" stroke="var(--safe)" stroke-width="1.5" marker-end="url(#ag)"/>
-        <line x1="150" y1="314" x2="150" y2="366" stroke="var(--safe)" stroke-width="1.5" marker-start="url(#ags)" marker-end="url(#ag)"/>
-        <text x="162" y="234" class="fl">flux autorisé, inspecté, journalisé</text>
+        <!-- barrière de sécurité (correctif 6) : boîte verte bas-gauche -->
+        <rect x="290" y="628" width="360" height="60" fill="var(--safe-soft)" stroke="var(--safe)" stroke-width="1.5"/>
+        <text x="304" y="648" class="nt" fill="var(--safe)">＋ Barrière de sécurité indépendante (SIL 2)</text>
+        <text x="304" y="666" class="ns" fill="var(--safe)">capteur + interlock câblés au réacteur, hors réseau —</text>
+        <text x="304" y="680" class="ns" fill="var(--safe)">purge d'urgence même si l'automate est piraté</text>
+        <line x1="650" y1="658" x2="716" y2="636" stroke="var(--safe)" stroke-width="1.4" stroke-dasharray="4 3"/>
+
+        <!-- FLOWS -->
+        <path d="M144,182 L144,250 L360,250 L360,300 L151,300 L151,356" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#a-ctrl)" marker-start="url(#a-ctrl-s)"/>
+        <text x="372" y="266" class="fl">Modbus 502 — surveillé (alerte si anormal)</text>
+        <text x="372" y="290" class="fl" fill="var(--ink-faint)">(traverse le pare-feu, désormais filtré)</text>
+
+        <path d="M256,415 L410,415" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#a-ctrl)" marker-start="url(#a-ctrl-s)"/>
+        <text x="333" y="408" class="fl" text-anchor="middle">Modbus 502 · 100 ms</text>
+
+        <path d="M650,430 L720,430" fill="none" stroke="var(--process)" stroke-width="1.6" marker-end="url(#a-proc)" marker-start="url(#a-ctrl-s)"/>
+        <text x="655" y="423" class="flp">JSON 55555</text>
+
+        <path d="M151,500 L151,474" fill="none" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#a-ctrl)"/>
+        <text x="160" y="492" class="fl" fill="var(--ink-faint)">dépôt fermé en exploitation</text>
+
+        <!-- firewall bar : maintenant vert -->
+        <rect x="30" y="298" width="940" height="18" fill="var(--safe-soft)" stroke="var(--safe)"/>
+        <text x="500" y="311" class="zt" fill="var(--safe)" text-anchor="middle" font-size="10.5">PARE-FEU FERMÉ — ne laisse passer que le flux IHM ↔ automate · tout le reste est bloqué et journalisé</text>
+
+        <!-- ===== PASTILLES VERTES ❶-❻ ===== -->
+        <!-- 1 : pare-feu -->
+        <circle cx="48" cy="307" r="12" fill="var(--safe)"/><text x="48" y="312" class="pin" text-anchor="middle">1</text>
+        <!-- 2 : Kali/Caldera retirés -->
+        <circle cx="454" cy="100" r="12" fill="var(--safe)"/><text x="454" y="105" class="pin" text-anchor="middle">2</text>
+        <!-- 3 : mots de passe / HTTPS (sur IHM) -->
+        <circle cx="242" cy="100" r="12" fill="var(--safe)"/><text x="242" y="105" class="pin" text-anchor="middle">3</text>
+        <!-- 4 : Modbus surveillé -->
+        <circle cx="360" cy="250" r="12" fill="var(--safe)"/><text x="360" y="255" class="pin" text-anchor="middle">4</text>
+        <!-- 5 : dépôt de programme bloqué -->
+        <circle cx="151" cy="487" r="12" fill="var(--safe)"/><text x="151" y="492" class="pin" text-anchor="middle">5</text>
+        <!-- 6 : barrière de sécurité -->
+        <circle cx="290" cy="628" r="12" fill="var(--safe)"/><text x="290" y="633" class="pin" text-anchor="middle">6</text>
       </svg>
     </div>
-    <div class="legend">
-      <span><i style="border-color:var(--safe)"></i> correctif ajouté / durci</span>
-      <span><i style="border-color:var(--signal)"></i> zone DMZ (SL 2)</span>
-      <span><i style="border-color:var(--accent)"></i> zone procédé (SL 3)</span>
-    </div>
-    <figcaption><b>Architecture finale, en miroir de la partie 1.</b> Même disposition, correctifs en vert : bastion + MFA, SIEM, pare-feu en refus par défaut avec inspection Modbus, IDS étendu à l'OT, automate signé, segmentation par cellules (DAI/802.1X) et barrière de sécurité SIL 2 indépendante. Le réseau d'administration hors bande a disparu.</figcaption>
+    <figcaption>Le schéma de la partie 1, inchangé. Les 6 pastilles vertes marquent les protections ajoutées ; Kali et Caldera (barrés en vert) sont retirés du réseau.</figcaption>
   </figure>
 </section>
 
 <section>
-  <div class="sec-head"><span class="sec-num">1</span><h2>Ce qui change, avant → après</h2></div>
-  <div class="table-scroll">
-    <table>
-      <thead><tr><th>Point</th><th>Avant (partie 1)</th><th>Après</th></tr></thead>
-      <tbody>
-        <tr><td>Pare-feu</td><td class="av">Règle « allow all »</td><td class="ap">Refus par défaut, une règle par flux</td></tr>
-        <tr><td>Modbus IHM↔automate</td><td class="av">En clair, sans contrôle</td><td class="ap">Inspecté (codes fonction, consignes bornées)</td></tr>
-        <tr><td>Réseau à plat</td><td class="av">Usurpation ARP possible</td><td class="ap">Cellules + DAI + 802.1X + port-security</td></tr>
-        <tr><td>Comptes</td><td class="av">Par défaut, HTTP</td><td class="ap">Nominatifs + MFA, TLS via bastion</td></tr>
-        <tr><td>Programme automate</td><td class="av">Téléversable librement</td><td class="ap">Signé, vérifié, dépôt fermé en exploitation</td></tr>
-        <tr><td>Détection</td><td class="av">IDS aveugle, pas de journal</td><td class="ap">IDS sur l'OT + SIEM centralisé</td></tr>
-        <tr><td>Réseau d'admin</td><td class="av">Hors bande, contourne tout</td><td class="ap">Supprimé — bastion unique</td></tr>
-        <tr><td>Sûreté procédé</td><td class="av">Aucune barrière indépendante</td><td class="ap">Barrière SIL 2 câblée, hors réseau</td></tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<section>
-  <div class="sec-head"><span class="sec-num">2</span><h2>Les 3 idées qui tiennent le tout</h2></div>
-  <div class="princ">
-    <div class="pr"><h4>Refus par défaut</h4><p>Un flux non nécessaire au procédé n'existe pas. Zones &amp; conduits, tout le reste bloqué et journalisé.</p></div>
-    <div class="pr"><h4>Ne plus faire confiance au réseau</h4><p>Modbus inspecté, ARP verrouillé, administration derrière un bastion : intercepter ne suffit plus pour agir.</p></div>
-    <div class="pr"><h4>Une sûreté hors du numérique</h4><p>La barrière SIL 2 arrête l'emballement même automate piraté — ce qui manquait pour empêcher l'explosion.</p></div>
+  <div class="sec-head"><span class="sec-num">▸</span><h2>Les 6 correctifs, en clair</h2></div>
+  <div class="fixes">
+    <div class="fix"><div class="num">1</div><div><h4>On ferme le pare-feu</h4><p>Il ne laisse plus passer que l'échange utile (IHM ↔ automate). Tout le reste est bloqué. Un poste de bureau ne peut plus atteindre l'automate.</p><span class="who">corrige : pare-feu ouvert (V1)</span></div></div>
+    <div class="fix"><div class="num">2</div><div><h4>On retire les outils d'attaque</h4><p>Le poste Kali et le serveur Caldera n'ont rien à faire sur le réseau de l'usine : on les débranche.</p><span class="who">corrige : outils offensifs sur site (V11)</span></div></div>
+    <div class="fix"><div class="num">3</div><div><h4>On change les mots de passe</h4><p>Fini les mots de passe par défaut : comptes personnels + double authentification, et les accès passent en HTTPS (chiffré) au lieu du HTTP.</p><span class="who">corrige : comptes par défaut / clair (V2, V6)</span></div></div>
+    <div class="fix"><div class="num">4</div><div><h4>On surveille le Modbus</h4><p>Un capteur (IDS) lit les échanges : toute commande anormale — comme une écriture venue d'ailleurs que l'IHM — déclenche une alerte remontée au SIEM.</p><span class="who">corrige : Modbus libre + pas de détection (V3, V5, V7)</span></div></div>
+    <div class="fix"><div class="num">5</div><div><h4>On bloque la modification de l'automate</h4><p>On ne peut plus déposer un programme à distance : le dépôt est fermé en fonctionnement, et le programme est signé/vérifié. C'est ce qui empêche le sabotage du TP.</p><span class="who">corrige : dépôt de code libre (V4)</span></div></div>
+    <div class="fix"><div class="num">6</div><div><h4>On ajoute une sécurité physique</h4><p>Un dispositif indépendant (capteur + vanne câblés, hors réseau) purge le réacteur en cas de surpression — <strong>même si l'automate est piraté</strong>. Le dernier rempart contre l'explosion.</p><span class="who">corrige : aucune barrière indépendante (V12)</span></div></div>
   </div>
 
   <div class="callout">
-    <h4>Résultat</h4>
-    <p>Les deux zones passent de <strong>SL 0 à SL 2</strong>, et la zone de contrôle/procédé atteint <strong>SL 3</strong>. La chaîne d'attaque du TP est coupée à chacun de ses maillons — physique, réseau et logiciel — et même en cas de compromission, la barrière indépendante évite la catastrophe. <em>De l'explosion à la maîtrise.</em></p>
+    <h4>Le résultat</h4>
+    <p>Avec ces 6 protections, la chaîne d'attaque du TP est coupée à chaque étape : on n'entre plus librement (❶❷), on ne se connecte plus avec un mot de passe trouvé (❸), on ne peut plus écouter ni piloter le Modbus en douce (❹), on ne peut plus saboter l'automate à distance (❺) — et si malgré tout ça tournait mal, la sécurité physique (❻) évite l'explosion. L'usine passe de « aucune défense » à un niveau adapté à l'attaquant rencontré.</p>
   </div>
 </section>
 
