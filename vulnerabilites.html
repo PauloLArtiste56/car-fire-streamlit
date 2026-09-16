@@ -1,0 +1,211 @@
+<title>Vulnérabilités — GRFICS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+  :root{
+    --ground:#EFF2F4; --surface:#FFFFFF; --surface-2:#F6F8F9;
+    --ink:#12181D; --ink-soft:#4B5862; --ink-faint:#73828C;
+    --line:#D2DAE0; --line-strong:#A9B6BF;
+    --accent:#14507B; --accent-soft:#E3ECF3;
+    --signal:#A96A0C; --signal-soft:#F7EEDF;
+    --critical:#9E2A2A; --critical-soft:#F6E6E4;
+    --safe:#2C6B50; --safe-soft:#E3EFE8;
+    --sans:"IBM Plex Sans Condensed",-apple-system,"Segoe UI",sans-serif;
+    --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0E1318; --surface:#161D24; --surface-2:#1B242C;
+      --ink:#E4EAEE; --ink-soft:#9CAAB5; --ink-faint:#7C8A95;
+      --line:#2A343D; --line-strong:#3E4C57;
+      --accent:#6BABDC; --accent-soft:#152B3C;
+      --signal:#DFA548; --signal-soft:#332815;
+      --critical:#E0776F; --critical-soft:#361D1C;
+      --safe:#6FBF95; --safe-soft:#16301F;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0E1318; --surface:#161D24; --surface-2:#1B242C;
+    --ink:#E4EAEE; --ink-soft:#9CAAB5; --ink-faint:#7C8A95;
+    --line:#2A343D; --line-strong:#3E4C57;
+    --accent:#6BABDC; --accent-soft:#152B3C;
+    --signal:#DFA548; --signal-soft:#332815;
+    --critical:#E0776F; --critical-soft:#361D1C;
+    --safe:#6FBF95; --safe-soft:#16301F;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);font-family:var(--serif);font-size:16.5px;line-height:1.6;margin:0;padding-inline:20px;padding-block:0 72px}
+  .wrap{max-width:1000px;margin:0 auto}
+  .col{max-width:74ch}
+  p{margin:0 0 1em}
+
+  header.mast{border-bottom:3px solid var(--ink);padding-block:38px 22px;margin-bottom:28px}
+  .kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:16px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(30px,5.5vw,50px);line-height:1.03;letter-spacing:-.015em;margin:0 0 12px;text-wrap:balance}
+  .standfirst{font-size:19px;color:var(--ink-soft);max-width:60ch;margin:0}
+
+  .families{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+  @media (max-width:620px){.families{grid-template-columns:1fr}}
+  .fam{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c,var(--accent));padding:12px 14px}
+  .fam.p{--c:var(--signal)}.fam.l{--c:var(--accent)}.fam.s{--c:var(--critical)}
+  .fam h4{font-family:var(--sans);font-size:15px;margin:0 0 3px}
+  .fam p{font-size:13.5px;color:var(--ink-soft);margin:0}
+  .fam .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--c);font-weight:600}
+
+  section{margin-block:42px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line-strong);padding-bottom:8px;margin-bottom:8px}
+  .sec-num{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.06em}
+  h2{font-family:var(--sans);font-weight:700;font-size:clamp(22px,3.2vw,30px);letter-spacing:-.01em;margin:0;text-wrap:balance}
+  .sub{font-size:16px;color:var(--ink-soft);margin:0 0 18px}
+
+  .table-scroll{overflow-x:auto;border:1px solid var(--line);background:var(--surface)}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-family:var(--sans);font-size:14.5px}
+  th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{background:var(--surface-2);font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;white-space:nowrap}
+  tbody tr:last-child td{border-bottom:none}
+  td.n{text-align:center;font-family:var(--mono);font-weight:600;color:var(--signal);width:2em}
+  .nat{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);white-space:nowrap}
+
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  @media (max-width:620px){.cards{grid-template-columns:1fr}}
+  .vuln{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--sev,var(--accent));padding:14px 16px}
+  .vuln[data-sev="crit"]{--sev:var(--critical)}
+  .vuln[data-sev="maj"]{--sev:var(--signal)}
+  .vhead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+  .vref{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--sev)}
+  .vname{font-family:var(--sans);font-weight:600;font-size:17px;flex:1 1 auto;line-height:1.15}
+  .badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;padding:2px 7px;border:1px solid var(--sev);color:var(--sev);white-space:nowrap;text-transform:uppercase}
+  .badge.tp{border-color:var(--line-strong);color:var(--ink-faint)}
+  .vuln dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:3px 10px}
+  .vuln dt{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);padding-top:3px;white-space:nowrap}
+  .vuln dd{margin:0;font-size:14.5px;color:var(--ink-soft)}
+  .vuln dd b{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.86em;background:var(--surface-2);padding:1px 4px;border-radius:2px;color:var(--accent)}
+
+  .callout{border:1px solid var(--line);border-top:3px solid var(--accent);background:var(--surface);padding:15px 18px;margin:26px 0 0}
+  .callout h4{font-family:var(--sans);font-size:17px;margin:0 0 6px}
+  .callout p:last-child{margin-bottom:0}
+  .note{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);border-left:2px solid var(--line-strong);padding-left:10px;margin-top:14px}
+  footer{border-top:1px solid var(--line-strong);margin-top:48px;padding-top:16px;font-family:var(--mono);font-size:11.5px;color:var(--ink-faint)}
+  @media print{body{background:#fff}}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker"><span>ECAM 5N — 2027</span><span>Cybersécurité industrielle</span><span>Partie 2/4 — Vulnérabilités</span></div>
+  <h1>Analyse des vulnérabilités</h1>
+  <p class="standfirst">Trois familles de failles ont permis d'aller de la porte d'entrée jusqu'à l'explosion du réacteur. On les sépare pour bien voir ce que chacune apporte à l'attaquant.</p>
+  <div class="families">
+    <div class="fam p"><span class="k">Physique</span><h4>9 failles sur site</h4><p>Accès aux locaux et aux secrets, sans toucher au réseau.</p></div>
+    <div class="fam l"><span class="k">Logique · réseau</span><h4>3 failles clés</h4><p>Le réseau laisse écouter, usurper et circuler librement.</p></div>
+    <div class="fam s"><span class="k">Logicielle · hôtes</span><h4>3 failles clés</h4><p>Les machines n'authentifient rien et ne surveillent rien.</p></div>
+  </div>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">A</span><h2>Vulnérabilités physiques</h2></div>
+  <p class="sub">Les 9 points relevés en se promenant dans l'usine. Ils donnent un accès direct — sans une seule ligne de code — aux locaux, aux équipements et aux mots de passe.</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>#</th><th>Vulnérabilité constatée</th><th>Ce qu'elle offre à l'attaquant</th><th>Nature</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td>Porte à badge maintenue ouverte par un parpaing</td><td>Entrée dans la zone sans badge</td><td class="nat">Accès</td></tr>
+        <tr><td class="n">2</td><td>Mot de passe sur post-it</td><td>Identifiant valide, offert</td><td class="nat">Secret</td></tr>
+        <tr><td class="n">3</td><td>Second mot de passe sur post-it</td><td>Second identifiant valide</td><td class="nat">Secret</td></tr>
+        <tr><td class="n">4</td><td>Carte d'accès laissée sur le bureau</td><td>Badge d'accès réutilisable</td><td class="nat">Accès</td></tr>
+        <tr><td class="n">5</td><td>Routeur en libre accès</td><td>Branchement pirate, reconfiguration réseau</td><td class="nat">Réseau</td></tr>
+        <tr><td class="n">6</td><td>Automate (PLC) laissé ouvert</td><td>Action directe sur l'organe de commande</td><td class="nat">Commande</td></tr>
+        <tr><td class="n">7</td><td>IHM utilisable sans se connecter</td><td>Conduite du procédé sans authentification</td><td class="nat">Commande</td></tr>
+        <tr><td class="n">8</td><td>Recette du procédé jetée à la corbeille</td><td>Fuite d'information sensible</td><td class="nat">Secret</td></tr>
+        <tr><td class="n">9</td><td>Fontaine à eau à côté de l'automate</td><td>Risque de dégât / court-circuit</td><td class="nat">Sûreté</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">C'est là que l'attaque du TP a réellement commencé : les mots de passe du routeur et de l'automate ont été ramassés physiquement, avant toute manipulation réseau. Huit de ces neuf points relèvent du comportement — d'où l'importance de la formation, qu'on chiffrera en partie 3.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">B</span><h2>Vulnérabilités logiques (réseau)</h2></div>
+  <p class="sub">Comment le réseau lui-même a trahi l'usine — les 3 failles qui ouvrent le chemin vers l'automate.</p>
+  <div class="cards">
+    <article class="vuln" data-sev="crit">
+      <div class="vhead"><span class="vref">V1</span><span class="vname">Pare-feu ouvert</span><span class="badge">Critique</span></div>
+      <dl>
+        <dt>C'est</dt><dd>Une règle <code>ACCEPT all</code> « temporaire » laissée en place : la DMZ atteint directement la zone procédé.</dd>
+        <dt>Effet</dt><dd><b>Aucune séparation réelle</b> — un poste bureautique compromis parle à l'automate en une étape.</dd>
+      </dl>
+    </article>
+    <article class="vuln" data-sev="crit">
+      <div class="vhead"><span class="vref">V3</span><span class="vname">Modbus sans authentification</span><span class="badge">Critique</span></div>
+      <dl>
+        <dt>C'est</dt><dd>Le protocole de commande (port <code>502</code>) n'a ni identité ni signature : il circule en clair.</dd>
+        <dt>Effet</dt><dd><b>Quiconque atteint le port 502 lit et écrit</b> les registres des vannes — vu au Wireshark du TP.</dd>
+      </dl>
+    </article>
+    <article class="vuln" data-sev="crit">
+      <div class="vhead"><span class="vref">V5</span><span class="vname">Usurpation ARP / MITM</span><span class="badge tp">exploité au TP</span></div>
+      <dl>
+        <dt>C'est</dt><dd>Réseau à plat sans protection : <code>arpspoof</code> permet de se faire passer pour l'automate ou la passerelle.</dd>
+        <dt>Effet</dt><dd><b>Interception et réécriture</b> du trafic IHM↔automate : l'opérateur voit du normal pendant la dérive.</dd>
+      </dl>
+    </article>
+    <article class="vuln" data-sev="maj">
+      <div class="vhead"><span class="vref">V10</span><span class="vname">Canal d'administration hors bande</span><span class="badge">Majeur</span></div>
+      <dl>
+        <dt>C'est</dt><dd>Un réseau d'admin relie tous les hôtes <b>en contournant le pare-feu</b>.</dd>
+        <dt>Effet</dt><dd>Rend caduque toute segmentation tant qu'il existe.</dd>
+      </dl>
+    </article>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">C</span><h2>Vulnérabilités logicielles (hôtes)</h2></div>
+  <p class="sub">Ce que les machines elles-mêmes autorisent — les 3 failles qui transforment l'accès en sabotage.</p>
+  <div class="cards">
+    <article class="vuln" data-sev="crit">
+      <div class="vhead"><span class="vref">V2</span><span class="vname">Identifiants par défaut</span><span class="badge tp">exploité au TP</span></div>
+      <dl>
+        <dt>C'est</dt><dd><code>admin</code>, <code>openplc</code>, mots de passe faibles partout, aucun compte nominatif.</dd>
+        <dt>Effet</dt><dd><b>Connexion directe</b> aux interfaces d'administration, sans traçabilité.</dd>
+      </dl>
+    </article>
+    <article class="vuln" data-sev="crit">
+      <div class="vhead"><span class="vref">V4</span><span class="vname">Dépôt de programme non contrôlé</span><span class="badge tp">exploité au TP</span></div>
+      <dl>
+        <dt>C'est</dt><dd>L'automate accepte n'importe quel programme téléversé (web 8080), sans signature ni contrôle.</dd>
+        <dt>Effet</dt><dd><b>Le coup fatal</b> : <code>pressure_sp := 65535</code> → purge bloquée → explosion.</dd>
+      </dl>
+    </article>
+    <article class="vuln" data-sev="maj">
+      <div class="vhead"><span class="vref">V7 · V8</span><span class="vname">Ni détection, ni journalisation</span><span class="badge">Majeur</span></div>
+      <dl>
+        <dt>C'est</dt><dd>IDS aveugle sur la zone procédé, SIEM désactivé, aucun journal centralisé.</dd>
+        <dt>Effet</dt><dd><b>L'attaque passe inaperçue</b> — aucune alerte, aucune trace pour l'analyser.</dd>
+      </dl>
+    </article>
+    <article class="vuln" data-sev="crit">
+      <div class="vhead"><span class="vref">V12</span><span class="vname">Aucune barrière de sécurité physique</span><span class="badge">Critique</span></div>
+      <dl>
+        <dt>C'est</dt><dd>La seule protection contre la surpression est le programme de l'automate — celui qu'on pirate.</dd>
+        <dt>Effet</dt><dd><b>Rien n'arrête l'emballement</b> une fois l'automate compromis : c'est ce qui rend l'explosion possible.</dd>
+      </dl>
+    </article>
+  </div>
+
+  <div class="callout">
+    <h4>La chaîne, en une phrase</h4>
+    <p>Les failles <strong>physiques</strong> donnent l'accès et les mots de passe → les failles <strong>réseau</strong> (pare-feu ouvert, Modbus en clair, ARP) mènent jusqu'à l'automate → les failles <strong>logicielles</strong> (comptes par défaut, dépôt de code libre, aucune barrière) transforment cet accès en explosion. <em>Chaque famille est un maillon ; couper un seul maillon suffit à casser l'attaque.</em></p>
+  </div>
+  <p class="note">On garde volontairement les plus importantes (8 sur 13). Les vulnérabilités secondaires — administration en clair, composants en fin de vie, outils offensifs sur site, hygiène — figurent en détail dans le dossier technique complet.</p>
+</section>
+
+<footer>
+  ECAM 5N — Promotion 2027 · Cybersécurité industrielle · Partie 2/4 — Analyse des vulnérabilités<br>
+  Thiboult · Grot · Gledel · Idigov · Environnement GRFICSv3 (Fortiphyd Logic)
+</footer>
+
+</div>
