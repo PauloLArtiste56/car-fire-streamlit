@@ -1,0 +1,199 @@
+<title>Exécution & coûts — GRFICS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+  :root{
+    --ground:#EFF2F4; --surface:#FFFFFF; --surface-2:#F6F8F9;
+    --ink:#12181D; --ink-soft:#4B5862; --ink-faint:#73828C;
+    --line:#D2DAE0; --line-strong:#A9B6BF;
+    --accent:#14507B; --accent-soft:#E3ECF3;
+    --signal:#A96A0C; --signal-soft:#F7EEDF;
+    --critical:#9E2A2A; --critical-soft:#F6E6E4;
+    --safe:#2C6B50; --safe-soft:#E3EFE8;
+    --sans:"IBM Plex Sans Condensed",-apple-system,"Segoe UI",sans-serif;
+    --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0E1318; --surface:#161D24; --surface-2:#1B242C;
+      --ink:#E4EAEE; --ink-soft:#9CAAB5; --ink-faint:#7C8A95;
+      --line:#2A343D; --line-strong:#3E4C57;
+      --accent:#6BABDC; --accent-soft:#152B3C;
+      --signal:#DFA548; --signal-soft:#332815;
+      --critical:#E0776F; --critical-soft:#361D1C;
+      --safe:#6FBF95; --safe-soft:#16301F;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0E1318; --surface:#161D24; --surface-2:#1B242C;
+    --ink:#E4EAEE; --ink-soft:#9CAAB5; --ink-faint:#7C8A95;
+    --line:#2A343D; --line-strong:#3E4C57;
+    --accent:#6BABDC; --accent-soft:#152B3C;
+    --signal:#DFA548; --signal-soft:#332815;
+    --critical:#E0776F; --critical-soft:#361D1C;
+    --safe:#6FBF95; --safe-soft:#16301F;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);font-family:var(--serif);font-size:16.5px;line-height:1.6;margin:0;padding-inline:20px;padding-block:0 72px}
+  .wrap{max-width:1000px;margin:0 auto}
+  .col{max-width:74ch}
+  p{margin:0 0 1em}
+
+  header.mast{border-bottom:3px solid var(--ink);padding-block:38px 22px;margin-bottom:26px}
+  .kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:16px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(30px,5.5vw,50px);line-height:1.03;letter-spacing:-.015em;margin:0 0 12px;text-wrap:balance}
+  .standfirst{font-size:19px;color:var(--ink-soft);max-width:60ch;margin:0}
+
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:24px}
+  @media (max-width:620px){.kpi{grid-template-columns:1fr 1fr}}
+  .kpi div{background:var(--surface);padding:14px 16px}
+  .kpi .v{font-family:var(--sans);font-weight:700;font-size:clamp(22px,3.4vw,30px);line-height:1.05;font-variant-numeric:tabular-nums}
+  .kpi .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);margin-top:5px}
+  .v.blue{color:var(--accent)}.v.green{color:var(--safe)}.v.red{color:var(--critical)}
+
+  section{margin-block:40px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line-strong);padding-bottom:8px;margin-bottom:8px}
+  .sec-num{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.06em}
+  h2{font-family:var(--sans);font-weight:700;font-size:clamp(22px,3.2vw,30px);letter-spacing:-.01em;margin:0;text-wrap:balance}
+  .sub{font-size:16px;color:var(--ink-soft);margin:0 0 18px}
+
+  .lots{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:6px}
+  @media (max-width:720px){.lots{grid-template-columns:1fr}}
+  .lot{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--c);padding:14px 16px;display:flex;flex-direction:column}
+  .lot.l0{--c:var(--safe)}.lot.l1{--c:var(--signal)}.lot.l2{--c:var(--accent)}
+  .lot .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--c);font-weight:600}
+  .lot h3{font-family:var(--sans);font-weight:700;font-size:19px;margin:2px 0 2px}
+  .lot .when{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-bottom:8px}
+  .lot ul{margin:0 0 10px;padding-left:1.1em}
+  .lot li{font-size:14px;color:var(--ink-soft);margin-bottom:3px}
+  .lot .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:8px}
+  .lot .cost{font-family:var(--sans);font-weight:700;font-size:19px}
+  .lot .sl{font-family:var(--mono);font-size:11px;color:var(--c);font-weight:600}
+
+  .table-scroll{overflow-x:auto;border:1px solid var(--line);background:var(--surface);margin-top:6px}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-family:var(--sans);font-size:14.5px}
+  th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+  thead th{background:var(--surface-2);font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;white-space:nowrap}
+  tbody tr:last-child td{border-bottom:none}
+  td.ref{font-family:var(--mono);color:var(--accent);font-weight:600;white-space:nowrap}
+  td.dot{text-align:center;font-family:var(--mono);letter-spacing:2px;white-space:nowrap}
+  .verdict{font-family:var(--mono);font-size:10px;letter-spacing:.05em;padding:2px 7px;border:1px solid var(--vc);color:var(--vc);text-transform:uppercase;white-space:nowrap}
+
+  .princ{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:6px}
+  @media (max-width:720px){.princ{grid-template-columns:1fr}}
+  .pr{background:var(--surface);border:1px solid var(--line);padding:14px 16px}
+  .pr .n{font-family:var(--sans);font-weight:700;font-size:20px;color:var(--accent);line-height:1}
+  .pr h4{font-family:var(--sans);font-size:16px;margin:8px 0 4px}
+  .pr p{font-size:14px;color:var(--ink-soft);margin:0}
+
+  .callout{border:1px solid var(--line);border-top:3px solid var(--signal);background:var(--surface);padding:15px 18px;margin-top:22px}
+  .callout h4{font-family:var(--sans);font-size:17px;margin:0 0 6px}
+  .callout p:last-child{margin-bottom:0}
+  .note{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);border-left:2px solid var(--line-strong);padding-left:10px;margin-top:12px}
+  footer{border-top:1px solid var(--line-strong);margin-top:46px;padding-top:16px;font-family:var(--mono);font-size:11.5px;color:var(--ink-faint)}
+  @media print{body{background:#fff}}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker"><span>ECAM 5N — 2027</span><span>Cybersécurité industrielle</span><span>Partie 3/4 — Mise en exécution &amp; coûts</span></div>
+  <h1>Par où commencer, et à quel prix</h1>
+  <p class="standfirst">On corrige dans l'ordre du plus rentable au plus lourd, sans arrêter la production. Hypothèses : 480 €/j interne, 950 €/j prestataire, <strong>6 500 € par heure d'arrêt</strong>.</p>
+  <div class="kpi">
+    <div><div class="v blue">17 850 €</div><div class="l">Lot 0 — attaque coupée en 2 semaines</div></div>
+    <div><div class="v">222 570 €</div><div class="l">Programme complet</div></div>
+    <div><div class="v green">134 820 €</div><div class="l">Si adossé aux arrêts planifiés</div></div>
+    <div><div class="v red">468 000 €</div><div class="l">Un incident type TP (72 h)</div></div>
+  </div>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">1</span><h2>Trois lots, priorisés par Security Level</h2></div>
+  <p class="sub">Priorité = écart au SL cible × effet sur l'attaque réelle. On ferme d'abord ce qui rouvrirait la porte du TP.</p>
+  <div class="lots">
+    <div class="lot l0">
+      <span class="tag">Lot 0 · urgent</span>
+      <h3>Couper l'attaque</h3>
+      <div class="when">0 – 2 semaines</div>
+      <ul>
+        <li>Fermer le pare-feu (refus par défaut)</li>
+        <li>Éradiquer les mots de passe par défaut</li>
+        <li>Activer l'IDS + le SIEM</li>
+        <li>Sauvegarde de référence</li>
+        <li>Retirer Kali &amp; Caldera</li>
+      </ul>
+      <div class="foot"><span class="cost">17 850 €</span><span class="sl">SL 0 → 2</span></div>
+    </div>
+    <div class="lot l1">
+      <span class="tag">Lot 1 · consolidation</span>
+      <h3>Verrouiller les accès</h3>
+      <div class="when">1 – 3 mois</div>
+      <ul>
+        <li>Bastion d'administration + MFA</li>
+        <li>TLS interne (fin du HTTP)</li>
+        <li>Durcir l'automate &amp; l'IHM</li>
+        <li>Déplacer l'IHM en supervision</li>
+        <li>Journalisation + horloge commune</li>
+      </ul>
+      <div class="foot"><span class="cost">37 240 €</span><span class="sl">SL 2 confirmé</span></div>
+    </div>
+    <div class="lot l2">
+      <span class="tag">Lot 2 · structurel</span>
+      <h3>Refondre &amp; sécuriser</h3>
+      <div class="when">3 – 12 mois</div>
+      <ul>
+        <li>Re-segmentation (DAI, 802.1X)</li>
+        <li>Pare-feu à inspection Modbus</li>
+        <li><strong>Barrière de sécurité SIL 2</strong></li>
+        <li>PRA testé, jumeau numérique</li>
+        <li>Formation + audit 62443</li>
+      </ul>
+      <div class="foot"><span class="cost">167 480 €</span><span class="sl">SL 3</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">2</span><h2>Quoi faire en premier : facilité × coût × efficacité</h2></div>
+  <p class="sub">Les « quick wins » (haut du tableau) sont faciles, peu chers et très efficaces — ils constituent le lot 0.</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Réf</th><th>Correctif</th><th>Facilité</th><th>Coût</th><th>Efficacité</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="ref">C4</td><td>Paramétrer l'IDS (Modbus, zone OT)</td><td class="dot" style="color:var(--safe)">●●●</td><td class="dot" style="color:var(--safe)">●○○</td><td class="dot" style="color:var(--safe)">●●●</td><td><span class="verdict" style="--vc:var(--safe)">quick win</span></td></tr>
+        <tr><td class="ref">C2</td><td>Supprimer les mots de passe par défaut</td><td class="dot" style="color:var(--safe)">●●●</td><td class="dot" style="color:var(--safe)">●○○</td><td class="dot" style="color:var(--safe)">●●●</td><td><span class="verdict" style="--vc:var(--safe)">quick win</span></td></tr>
+        <tr><td class="ref">C1</td><td>Pare-feu en refus par défaut</td><td class="dot" style="color:var(--signal)">●●○</td><td class="dot" style="color:var(--safe)">●○○</td><td class="dot" style="color:var(--safe)">●●●</td><td><span class="verdict" style="--vc:var(--safe)">quick win</span></td></tr>
+        <tr><td class="ref">C17</td><td>Formation &amp; sensibilisation (physique)</td><td class="dot" style="color:var(--safe)">●●●</td><td class="dot" style="color:var(--signal)">●●○</td><td class="dot" style="color:var(--signal)">●●○</td><td><span class="verdict" style="--vc:var(--signal)">prioritaire</span></td></tr>
+        <tr><td class="ref">C5</td><td>SIEM + alertes OT</td><td class="dot" style="color:var(--signal)">●●○</td><td class="dot" style="color:var(--signal)">●●○</td><td class="dot" style="color:var(--safe)">●●●</td><td><span class="verdict" style="--vc:var(--signal)">prioritaire</span></td></tr>
+        <tr><td class="ref">C7·8</td><td>Bastion + MFA, TLS interne</td><td class="dot" style="color:var(--signal)">●●○</td><td class="dot" style="color:var(--signal)">●●○</td><td class="dot" style="color:var(--safe)">●●●</td><td><span class="verdict" style="--vc:var(--signal)">prioritaire</span></td></tr>
+        <tr><td class="ref">C13·14</td><td>Segmentation + pare-feu Modbus</td><td class="dot" style="color:var(--critical)">●○○</td><td class="dot" style="color:var(--critical)">●●●</td><td class="dot" style="color:var(--safe)">●●●</td><td><span class="verdict" style="--vc:var(--accent)">structurel</span></td></tr>
+        <tr><td class="ref">C15</td><td>Barrière de sécurité SIL 2</td><td class="dot" style="color:var(--critical)">●○○</td><td class="dot" style="color:var(--critical)">●●●</td><td class="dot" style="color:var(--safe)">●●●</td><td><span class="verdict" style="--vc:var(--critical)">incontournable</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">●●● fort / facile / peu coûteux — ●○○ faible / difficile / coûteux. Le coût de la barrière SIL 2 est assumé : c'est la seule mesure qui protège le procédé même si tout le numérique est compromis.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">3</span><h2>Comment déployer sans arrêter l'usine</h2></div>
+  <div class="princ">
+    <div class="pr"><div class="n">1</div><h4>Valider hors ligne</h4><p>Chaque changement testé sur un jumeau numérique ; le pare-feu tourne 72 h en « journalisation seule » avant de bloquer.</p></div>
+    <div class="pr"><div class="n">2</div><h4>Grouper les arrêts</h4><p>Les 13,5 h d'arrêt adossées aux fenêtres de maintenance existantes — coût d'indisponibilité quasi nul au lieu de 87 750 €.</p></div>
+    <div class="pr"><div class="n">3</div><h4>Toujours un point de retour</h4><p>Aucun déploiement sans sauvegarde de référence vérifiée et procédure de retour arrière prête.</p></div>
+  </div>
+
+  <div class="callout">
+    <h4>L'argument pour la direction</h4>
+    <p>Sur les 222 570 €, <strong>87 750 € ne sont pas de la sécurité mais de l'arrêt de production</strong> ; en collant les travaux aux arrêts déjà prévus, la facture réelle tombe à <strong>134 820 €</strong>. Le lot 0 se rembourse en <strong>moins de 3 heures d'arrêt évité</strong>, le programme complet en <strong>moins d'un incident évité</strong> (un seul coûte 468 000 €). La vraie question n'est pas « faut-il dépenser ? » mais « accepte-t-on de rester exposé ? ».</p>
+  </div>
+</section>
+
+<footer>
+  ECAM 5N — Promotion 2027 · Cybersécurité industrielle · Partie 3/4 — Mise en exécution &amp; coûts<br>
+  Thiboult · Grot · Gledel · Idigov · Hypothèses : 480 €/j interne · 950 €/j prestataire · 6 500 €/h d'arrêt
+</footer>
+
+</div>
