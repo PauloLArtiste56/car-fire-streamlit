@@ -102,32 +102,28 @@
   <h1>Analyse des vulnérabilités</h1>
   <p class="standfirst">Trois familles de failles ont permis d'aller de la porte d'entrée jusqu'à l'explosion du réacteur. On les sépare pour bien voir ce que chacune apporte à l'attaquant.</p>
   <div class="families">
-    <div class="fam p"><span class="k">Physique</span><h4>9 failles sur site</h4><p>Accès aux locaux et aux secrets, sans toucher au réseau.</p></div>
-    <div class="fam l"><span class="k">Logique · réseau</span><h4>4 failles clés</h4><p>Le réseau laisse écouter, usurper et circuler librement.</p></div>
-    <div class="fam s"><span class="k">Logicielle · hôtes</span><h4>4 failles clés</h4><p>Les machines n'authentifient rien et ne surveillent rien.</p></div>
+    <div class="fam p"><span class="k">Physique</span><h4>5 failles retenues</h4><p>Accès aux locaux et aux secrets, sans toucher au réseau.</p></div>
+    <div class="fam l"><span class="k">Logique · réseau</span><h4>2 failles clés</h4><p>Le réseau laisse tout circuler librement.</p></div>
+    <div class="fam s"><span class="k">Logicielle · hôtes</span><h4>2 failles clés</h4><p>Rien n'est surveillé, rien n'arrête l'emballement.</p></div>
   </div>
 </header>
 
 <section>
   <div class="sec-head"><span class="sec-num">A</span><h2>Vulnérabilités physiques</h2></div>
-  <p class="sub">Les 9 points relevés en se promenant dans l'usine. Ils donnent un accès direct — sans une seule ligne de code — aux locaux, aux équipements et aux mots de passe.</p>
+  <p class="sub">Les points relevés en se promenant dans l'usine. Ils donnent un accès direct — sans une seule ligne de code — aux locaux, aux équipements et aux mots de passe.</p>
   <div class="table-scroll">
     <table>
       <thead><tr><th>#</th><th>Vulnérabilité constatée</th><th>Risque</th><th>Correctif</th></tr></thead>
       <tbody>
         <tr><td class="n">1</td><td>Porte à badge maintenue ouverte par un parpaing</td><td>Entrée sans badge</td><td class="fix">Ferme-porte + alarme porte forcée, sensibilisation</td></tr>
-        <tr><td class="n">2</td><td>Mot de passe sur post-it</td><td>Identifiant offert</td><td class="fix">Coffre-fort de mots de passe, « clean desk »</td></tr>
-        <tr><td class="n">3</td><td>Second mot de passe sur post-it</td><td>Identifiant offert</td><td class="fix">Idem : aucun secret sur papier</td></tr>
+        <tr><td class="n">2</td><td>Mots de passe sur post-it (×2)</td><td>Identifiants offerts</td><td class="fix">Coffre-fort de mots de passe, « clean desk », aucun secret sur papier</td></tr>
         <tr><td class="n">4</td><td>Carte d'accès laissée sur le bureau</td><td>Badge réutilisable</td><td class="fix">Badge personnel porté sur soi, désactivation si perdu</td></tr>
-        <tr><td class="n">5</td><td>Routeur en libre accès</td><td>Branchement pirate</td><td class="fix">Armoire réseau verrouillée, ports inutilisés coupés</td></tr>
         <tr><td class="n">6</td><td>Automate (PLC) laissé ouvert</td><td>Action directe</td><td class="fix">Armoire à clé, commutateur RUN/PROG physique</td></tr>
         <tr><td class="n">7</td><td>IHM utilisable sans se connecter</td><td>Conduite sans auth.</td><td class="fix">Verrouillage de session auto, authentification obligatoire</td></tr>
-        <tr><td class="n">8</td><td>Recette du procédé jetée à la corbeille</td><td>Fuite d'info sensible</td><td class="fix">Destruction sécurisée (broyeur), marquage confidentiel</td></tr>
-        <tr><td class="n">9</td><td>Fontaine à eau à côté de l'automate</td><td>Dégât / court-circuit</td><td class="fix">Éloigner les liquides, bac de rétention</td></tr>
       </tbody>
     </table>
   </div>
-  <p class="note">C'est là que l'attaque du TP a réellement commencé : les mots de passe du routeur et de l'automate ont été ramassés physiquement, avant toute manipulation réseau. Huit de ces neuf points relèvent du comportement — d'où l'importance de la formation, qu'on chiffrera en partie 3.</p>
+  <p class="note">C'est là que l'attaque du TP a réellement commencé : les mots de passe du routeur et de l'automate ont été ramassés physiquement, avant toute manipulation réseau. La plupart de ces points relèvent du comportement — d'où l'importance de la formation, qu'on chiffrera en partie 3.</p>
 </section>
 
 <section>
@@ -150,45 +146,13 @@
       <dt class="fix">Correctif</dt><dd class="fix">Pare-feu à inspection Modbus (codes fonction en liste blanche), à terme Modbus/TLS</dd>
       </dl>
     </article>
-    <article class="vuln" data-sev="crit">
-      <div class="vhead"><span class="vref">V5</span><span class="vname">Usurpation ARP / MITM</span><span class="badge tp">exploité au TP</span></div>
-      <dl>
-        <dt>C'est</dt><dd>Réseau à plat sans protection : <code>arpspoof</code> permet de se faire passer pour l'automate ou la passerelle.</dd>
-        <dt>Effet</dt><dd><b>Interception et réécriture</b> du trafic IHM↔automate : l'opérateur voit du normal pendant la dérive.</dd>
-      <dt class="fix">Correctif</dt><dd class="fix">Dynamic ARP Inspection, port-security, 802.1X sur les commutateurs</dd>
-      </dl>
-    </article>
-    <article class="vuln" data-sev="maj">
-      <div class="vhead"><span class="vref">V10</span><span class="vname">Canal d'administration hors bande</span><span class="badge">Majeur</span></div>
-      <dl>
-        <dt>C'est</dt><dd>Un réseau d'admin relie tous les hôtes <b>en contournant le pare-feu</b>.</dd>
-        <dt>Effet</dt><dd>Rend caduque toute segmentation tant qu'il existe.</dd>
-      <dt class="fix">Correctif</dt><dd class="fix">Suppression du canal hors bande, administration via un bastion unique</dd>
-      </dl>
-    </article>
   </div>
 </section>
 
 <section>
   <div class="sec-head"><span class="sec-num">C</span><h2>Vulnérabilités logicielles (hôtes)</h2></div>
-  <p class="sub">Ce que les machines elles-mêmes autorisent — les failles qui transforment l'accès en sabotage.</p>
+  <p class="sub">Ce que les machines ne font pas : surveiller ce qui se passe, et arrêter l'emballement.</p>
   <div class="cards">
-    <article class="vuln" data-sev="crit">
-      <div class="vhead"><span class="vref">V2</span><span class="vname">Identifiants par défaut</span><span class="badge tp">exploité au TP</span></div>
-      <dl>
-        <dt>C'est</dt><dd><code>admin</code>, <code>openplc</code>, mots de passe faibles partout, aucun compte nominatif.</dd>
-        <dt>Effet</dt><dd><b>Connexion directe</b> aux interfaces d'administration, sans traçabilité.</dd>
-      <dt class="fix">Correctif</dt><dd class="fix">Comptes nominatifs + MFA, mots de passe forts, fin des comptes par défaut</dd>
-      </dl>
-    </article>
-    <article class="vuln" data-sev="crit">
-      <div class="vhead"><span class="vref">V4</span><span class="vname">Dépôt de programme non contrôlé</span><span class="badge tp">exploité au TP</span></div>
-      <dl>
-        <dt>C'est</dt><dd>L'automate accepte n'importe quel programme téléversé (web 8080), sans signature ni contrôle.</dd>
-        <dt>Effet</dt><dd><b>Le coup fatal</b> : <code>pressure_sp := 65535</code> → purge bloquée → explosion.</dd>
-      <dt class="fix">Correctif</dt><dd class="fix">Programme signé et vérifié, interface d’ingénierie fermée en exploitation</dd>
-      </dl>
-    </article>
     <article class="vuln" data-sev="maj">
       <div class="vhead"><span class="vref">V7 · V8</span><span class="vname">Ni détection, ni journalisation</span><span class="badge">Majeur</span></div>
       <dl>
@@ -208,10 +172,10 @@
   </div>
 
   <div class="callout">
-    <h4>La chaîne, en une phrase</h4>
-    <p>Les failles <strong>physiques</strong> donnent l'accès et les mots de passe → les failles <strong>réseau</strong> (pare-feu ouvert, Modbus en clair, ARP) mènent jusqu'à l'automate → les failles <strong>logicielles</strong> (comptes par défaut, dépôt de code libre, aucune barrière) transforment cet accès en explosion. <em>Chaque famille est un maillon ; couper un seul maillon suffit à casser l'attaque.</em></p>
+    <h4>Le récap, en une phrase</h4>
+    <p>Les failles <strong>physiques</strong> donnent l'accès et les mots de passe → le <strong>pare-feu ouvert (V1)</strong> et le <strong>Modbus en clair (V3)</strong> mènent librement jusqu'à l'automate → l'<strong>absence de détection (V7·V8)</strong> laisse l'attaque passer inaperçue → et l'<strong>absence de barrière indépendante (V12)</strong> transforme la prise de contrôle en explosion. <em>Chaque maillon coupé casse l'attaque ; la barrière V12 est le dernier rempart.</em></p>
   </div>
-  <p class="note">On garde volontairement les plus importantes (8 sur 13). Les vulnérabilités secondaires — administration en clair, composants en fin de vie, outils offensifs sur site, hygiène — figurent en détail dans le dossier technique complet.</p>
+  <p class="note">On ne garde que les 4 failles logiques/logicielles les plus déterminantes. Les autres (usurpation ARP, canal d'admin hors bande, comptes par défaut, dépôt de code, composants obsolètes…) restent détaillées dans le dossier technique complet.</p>
 </section>
 
 <footer>
