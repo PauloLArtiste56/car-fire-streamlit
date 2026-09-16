@@ -1,0 +1,330 @@
+<title>Architecture initiale — GRFICS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+  :root{
+    --ground:#EFF2F4; --surface:#FFFFFF; --surface-2:#F6F8F9;
+    --ink:#12181D; --ink-soft:#4B5862; --ink-faint:#73828C;
+    --line:#D2DAE0; --line-strong:#A9B6BF;
+    --accent:#14507B; --accent-soft:#E3ECF3;
+    --signal:#A96A0C; --signal-soft:#F7EEDF;
+    --critical:#9E2A2A; --critical-soft:#F6E6E4;
+    --safe:#2C6B50; --safe-soft:#E3EFE8;
+    --process:#5A3B8B; --process-soft:#EEE8F5;
+    --sans:"IBM Plex Sans Condensed",-apple-system,"Segoe UI",sans-serif;
+    --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+    --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0E1318; --surface:#161D24; --surface-2:#1B242C;
+      --ink:#E4EAEE; --ink-soft:#9CAAB5; --ink-faint:#7C8A95;
+      --line:#2A343D; --line-strong:#3E4C57;
+      --accent:#6BABDC; --accent-soft:#152B3C;
+      --signal:#DFA548; --signal-soft:#332815;
+      --critical:#E0776F; --critical-soft:#361D1C;
+      --safe:#6FBF95; --safe-soft:#16301F;
+      --process:#B79BE0; --process-soft:#251B39;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0E1318; --surface:#161D24; --surface-2:#1B242C;
+    --ink:#E4EAEE; --ink-soft:#9CAAB5; --ink-faint:#7C8A95;
+    --line:#2A343D; --line-strong:#3E4C57;
+    --accent:#6BABDC; --accent-soft:#152B3C;
+    --signal:#DFA548; --signal-soft:#332815;
+    --critical:#E0776F; --critical-soft:#361D1C;
+    --safe:#6FBF95; --safe-soft:#16301F;
+    --process:#B79BE0; --process-soft:#251B39;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--ground);color:var(--ink);font-family:var(--serif);font-size:16.5px;line-height:1.62;margin:0;padding-inline:20px;padding-block:0 72px}
+  .wrap{max-width:1080px;margin:0 auto}
+  .col{max-width:74ch}
+  p{margin:0 0 1em}
+
+  header.mast{border-bottom:3px solid var(--ink);padding-block:38px 22px;margin-bottom:30px}
+  .kicker{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:16px}
+  h1{font-family:var(--sans);font-weight:700;font-size:clamp(30px,5.5vw,50px);line-height:1.03;letter-spacing:-.015em;margin:0 0 12px;text-wrap:balance}
+  .standfirst{font-size:19px;color:var(--ink-soft);max-width:60ch;margin:0}
+
+  section{margin-block:44px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--line-strong);padding-bottom:8px;margin-bottom:20px}
+  .sec-num{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.06em}
+  h2{font-family:var(--sans);font-weight:700;font-size:clamp(22px,3.2vw,30px);letter-spacing:-.01em;margin:0;text-wrap:balance}
+  h3{font-family:var(--sans);font-weight:600;font-size:19px;margin:26px 0 8px}
+  .lede{font-size:18px;color:var(--ink-soft)}
+
+  figure{margin:24px 0 0}
+  .planche{background:var(--surface);border:1px solid var(--line);padding:16px;overflow-x:auto}
+  .planche svg{display:block;min-width:900px;width:100%;height:auto}
+  figcaption{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);margin-top:10px;line-height:1.5}
+  figcaption b{color:var(--ink-soft);font-weight:600}
+
+  .table-scroll{overflow-x:auto;border:1px solid var(--line);background:var(--surface);margin:20px 0}
+  table{border-collapse:collapse;width:100%;min-width:620px;font-family:var(--sans);font-size:14.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{background:var(--surface-2);font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;white-space:nowrap}
+  tbody tr:last-child td{border-bottom:none}
+  code{font-family:var(--mono);font-size:.88em;background:var(--surface-2);padding:1px 5px;border-radius:2px;color:var(--accent)}
+  .mono{font-family:var(--mono)}
+
+  .step{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;margin:0 0 14px}
+  .step .n{font-family:var(--sans);font-weight:700;font-size:22px;color:var(--accent);min-width:1.6em;text-align:center;line-height:1.2}
+  .step .b{font-size:16px}
+  .step .b b{font-family:var(--sans)}
+
+  .callout{border:1px solid var(--line);border-top:3px solid var(--accent);background:var(--surface);padding:16px 18px;margin:22px 0}
+  .callout.warn{border-top-color:var(--signal)}
+  .callout h4{font-family:var(--sans);font-size:17px;margin:0 0 6px}
+  .callout p:last-child{margin-bottom:0}
+  .note{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);border-left:2px solid var(--line-strong);padding-left:10px;margin-top:.5em}
+
+  .legend{display:flex;flex-wrap:wrap;gap:8px 20px;font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);margin-top:12px}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .legend i{width:22px;height:0;border-top-width:3px;border-top-style:solid;display:inline-block}
+  footer{border-top:1px solid var(--line-strong);margin-top:50px;padding-top:16px;font-family:var(--mono);font-size:11.5px;color:var(--ink-faint)}
+  @media print{body{background:#fff}.planche{break-inside:avoid}}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker"><span>ECAM 5N — 2027</span><span>Cybersécurité industrielle</span><span>Partie 1/4 — Architecture initiale</span></div>
+  <h1>L'usine GRFICS avant durcissement</h1>
+  <p class="standfirst">Comment le procédé, l'automate et la supervision communiquent aujourd'hui — machines, protocoles, ports et zones — vus par le défenseur qui connaît son installation.</p>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">▸</span><h2>Schéma d'architecture</h2></div>
+
+  <figure>
+    <div class="planche">
+      <svg viewBox="0 0 1000 720" role="img" aria-label="Architecture initiale détaillée de l'usine GRFICS avec la boucle de régulation du procédé.">
+        <defs>
+          <marker id="a-ctrl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker>
+          <marker id="a-proc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--process)"/></marker>
+          <marker id="a-ctrl-s" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M10,0 L0,5 L10,10 z" fill="var(--accent)"/></marker>
+        </defs>
+        <style>
+          .zt{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;font-weight:600}
+          .zn{font-family:var(--mono);font-size:10px;fill:var(--ink-faint)}
+          .nt{font-family:var(--sans);font-size:13.5px;font-weight:600;fill:var(--ink)}
+          .nip{font-family:var(--mono);font-size:10.5px;fill:var(--accent)}
+          .ns{font-family:var(--mono);font-size:10px;fill:var(--ink-soft)}
+          .role{font-family:var(--mono);font-size:9.5px;fill:var(--ink-faint)}
+          .fl{font-family:var(--mono);font-size:10px;fill:var(--accent)}
+          .flp{font-family:var(--mono);font-size:10px;fill:var(--process)}
+        </style>
+
+        <!-- admin bridge -->
+        <rect x="30" y="12" width="940" height="30" fill="var(--surface-2)" stroke="var(--line-strong)" stroke-dasharray="5 4"/>
+        <text x="46" y="31" class="zn" fill="var(--ink-soft)">RÉSEAU D'ADMINISTRATION — bridge Docker « a-grfics-admin » : relie tous les hôtes, en dehors du pare-feu</text>
+
+        <!-- DMZ zone -->
+        <rect x="30" y="58" width="440" height="238" fill="none" stroke="var(--signal)" stroke-width="1.5"/>
+        <rect x="30" y="58" width="440" height="22" fill="var(--signal-soft)"/>
+        <text x="44" y="74" class="zt" fill="var(--signal)">ZONE BUREAUTIQUE / DMZ — 192.168.90.0/24</text>
+
+        <!-- HMI -->
+        <rect x="46" y="92" width="196" height="90" fill="var(--surface)" stroke="var(--line-strong)"/>
+        <text x="58" y="112" class="nt">IHM Scada-LTS</text>
+        <text x="58" y="129" class="nip">192.168.90.107</text>
+        <text x="58" y="146" class="ns">HTTP 8080 · Modbus/TCP</text>
+        <text x="58" y="162" class="ns">vues, alarmes, consignes</text>
+        <text x="58" y="177" class="role">rôle Modbus : MAÎTRE → automate</text>
+
+        <!-- Kali -->
+        <rect x="256" y="92" width="198" height="42" fill="var(--surface)" stroke="var(--line-strong)"/>
+        <text x="268" y="110" class="nt">Poste Kali</text>
+        <text x="268" y="126" class="nip">192.168.90.6 · noVNC 6088</text>
+        <!-- Caldera -->
+        <rect x="256" y="142" width="198" height="40" fill="var(--surface)" stroke="var(--line-strong)"/>
+        <text x="268" y="160" class="nt">Caldera</text>
+        <text x="268" y="175" class="nip">192.168.90.250 · 8888</text>
+
+        <text x="44" y="210" class="zn">Accès opérateur &amp; navigateurs · tout en HTTP</text>
+        <text x="44" y="278" class="zn" fill="var(--signal)">Passerelle DMZ : 192.168.90.200 (routeur)</text>
+
+        <!-- ICS zone -->
+        <rect x="30" y="316" width="940" height="386" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+        <rect x="30" y="316" width="940" height="22" fill="var(--accent-soft)"/>
+        <text x="44" y="332" class="zt" fill="var(--accent)">ZONE PROCÉDÉ / ICS — 192.168.95.0/24</text>
+        <text x="956" y="332" class="zn" text-anchor="end">niveaux 0-1-2 sur un même réseau plat</text>
+
+        <!-- PLC -->
+        <rect x="46" y="356" width="210" height="118" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="1.5"/>
+        <text x="58" y="377" class="nt">Automate OpenPLC</text>
+        <text x="58" y="394" class="nip">192.168.95.2</text>
+        <text x="58" y="411" class="ns">Modbus/TCP 502 · web 8080</text>
+        <text x="58" y="428" class="ns">exécute la régulation (ST)</text>
+        <text x="58" y="447" class="role">SERVEUR ← IHM</text>
+        <text x="58" y="462" class="role">MAÎTRE → E/S déportées</text>
+
+        <!-- Engineering WS -->
+        <rect x="46" y="500" width="210" height="86" fill="var(--surface)" stroke="var(--line-strong)"/>
+        <text x="58" y="520" class="nt">Poste d'ingénierie</text>
+        <text x="58" y="537" class="nip">192.168.95.5</text>
+        <text x="58" y="554" class="ns">noVNC 6080 · OpenPLC Editor</text>
+        <text x="58" y="571" class="ns">dépose le programme (ST)</text>
+
+        <!-- remote IO stack -->
+        <rect x="410" y="356" width="240" height="250" fill="var(--surface-2)" stroke="var(--line-strong)"/>
+        <text x="422" y="375" class="nt">Entrées / Sorties déportées</text>
+        <text x="422" y="391" class="ns">6 serveurs Modbus/TCP · port 502</text>
+        <g font-family="var(--mono)" font-size="10.5px">
+          <rect x="422" y="402" width="216" height="26" fill="var(--surface)" stroke="var(--line)"/><text x="430" y="419" class="ns">.95.10  Feed 1 — alimentation</text>
+          <rect x="422" y="430" width="216" height="26" fill="var(--surface)" stroke="var(--line)"/><text x="430" y="447" class="ns">.95.11  Feed 2 — alimentation</text>
+          <rect x="422" y="458" width="216" height="26" fill="var(--surface)" stroke="var(--line)"/><text x="430" y="475" class="ns">.95.12  Purge — vanne de purge</text>
+          <rect x="422" y="486" width="216" height="26" fill="var(--surface)" stroke="var(--line)"/><text x="430" y="503" class="ns">.95.13  Product — soutirage</text>
+          <rect x="422" y="514" width="216" height="26" fill="var(--critical-soft)" stroke="var(--critical)"/><text x="430" y="531" class="ns" fill="var(--critical)">.95.14  Réacteur — niveau &amp; pression</text>
+          <rect x="422" y="542" width="216" height="26" fill="var(--surface)" stroke="var(--line)"/><text x="430" y="559" class="ns">.95.15  Analyzer — composition</text>
+        </g>
+        <text x="422" y="592" class="role">esclave 247 · aucune authentification</text>
+
+        <!-- Simulation -->
+        <rect x="720" y="356" width="234" height="140" fill="var(--surface)" stroke="var(--process)" stroke-width="1.5"/>
+        <text x="732" y="377" class="nt">Serveur de simulation</text>
+        <text x="732" y="394" class="nip" fill="var(--process)">192.168.95.45</text>
+        <text x="732" y="412" class="ns">modèle physique du réacteur</text>
+        <text x="732" y="429" class="ns">socket JSON — port 55555</text>
+        <text x="732" y="446" class="ns">visualisation 3D (HTTP 80)</text>
+        <text x="732" y="466" class="role">capteurs &amp; actionneurs simulés</text>
+        <text x="732" y="482" class="role">= le « monde physique »</text>
+
+        <!-- reactor mini schematic -->
+        <rect x="720" y="516" width="234" height="170" fill="var(--process-soft)" stroke="var(--process)"/>
+        <text x="732" y="535" class="zt" fill="var(--process)">LE PROCÉDÉ</text>
+        <!-- vessel -->
+        <rect x="812" y="556" width="52" height="80" rx="10" fill="var(--surface)" stroke="var(--process)" stroke-width="1.5"/>
+        <text x="838" y="600" class="ns" fill="var(--process)" text-anchor="middle" font-size="9.5">réacteur</text>
+        <text x="838" y="612" class="ns" fill="var(--process)" text-anchor="middle" font-size="9.5">(ballon)</text>
+        <!-- feeds in -->
+        <line x1="748" y1="566" x2="812" y2="566" stroke="var(--process)" stroke-width="1.4" marker-end="url(#a-proc)"/>
+        <text x="742" y="563" class="flp" text-anchor="end" font-size="9">Feed 1/2</text>
+        <!-- purge out top -->
+        <line x1="838" y1="556" x2="838" y2="540" stroke="var(--process)" stroke-width="1.4" marker-end="url(#a-proc)"/>
+        <text x="848" y="548" class="flp" font-size="9">purge (pression)</text>
+        <!-- product out -->
+        <line x1="864" y1="620" x2="928" y2="620" stroke="var(--process)" stroke-width="1.4" marker-end="url(#a-proc)"/>
+        <text x="900" y="636" class="flp" text-anchor="middle" font-size="9">product</text>
+        <text x="732" y="668" class="role">+ alimentation ⇒ pression ↑</text>
+        <text x="732" y="681" class="role">+ purge ⇒ pression ↓</text>
+
+        <!-- FLOWS -->
+        <!-- HMI -> PLC (control, crosses firewall) -->
+        <path d="M144,182 L144,250 L360,250 L360,300 L151,300 L151,356" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#a-ctrl)" marker-start="url(#a-ctrl-s)"/>
+        <text x="366" y="266" class="fl">Modbus/TCP 502 — lecture mesures + écriture consignes</text>
+        <text x="366" y="290" class="fl" fill="var(--ink-faint)">(traverse le pare-feu DMZ ↔ ICS)</text>
+
+        <!-- PLC -> remote IO -->
+        <path d="M256,415 L410,415" fill="none" stroke="var(--accent)" stroke-width="1.6" marker-end="url(#a-ctrl)" marker-start="url(#a-ctrl-s)"/>
+        <text x="333" y="408" class="fl" text-anchor="middle">Modbus 502 · 100 ms</text>
+
+        <!-- remote IO <-> simulation -->
+        <path d="M650,430 L720,430" fill="none" stroke="var(--process)" stroke-width="1.6" marker-end="url(#a-proc)" marker-start="url(#a-ctrl-s)"/>
+        <text x="655" y="423" class="flp">JSON 55555</text>
+
+        <!-- eng WS -> PLC web -->
+        <path d="M151,500 L151,474" fill="none" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#a-ctrl)"/>
+        <text x="160" y="492" class="fl" fill="var(--ink-faint)">HTTP 8080 — dépôt du programme</text>
+
+        <!-- firewall bar between zones -->
+        <rect x="30" y="298" width="940" height="18" fill="var(--critical-soft)" stroke="var(--critical)"/>
+        <text x="500" y="311" class="zt" fill="var(--critical)" text-anchor="middle" font-size="10.5">PARE-FEU / ROUTEUR 192.168.90.200 ↔ 192.168.95.200 — règle « ACCEPT all » : laisse tout passer</text>
+      </svg>
+    </div>
+    <div class="legend">
+      <span><i style="border-color:var(--accent)"></i> flux de conduite (Modbus / HTTP)</span>
+      <span><i style="border-color:var(--process)"></i> lien procédé (E/S ↔ simulation)</span>
+      <span><i style="border-color:var(--critical);border-top-style:solid"></i> frontière de zone (pare-feu ouvert)</span>
+    </div>
+    <figcaption><b>Architecture initiale.</b> Deux zones (DMZ et ICS) reliées par un routeur/pare-feu qui laisse tout passer, plus un réseau d'administration hors bande. La boucle de régulation relie la simulation (le « physique »), les E/S déportées, l'automate et l'IHM.</figcaption>
+  </figure>
+</section>
+
+<section class="col">
+  <div class="sec-head"><span class="sec-num">1</span><h2>Le procédé : ce que l'usine fabrique</h2></div>
+  <p class="lede">Au cœur de l'installation, un <strong>réacteur chimique</strong> (le « ballon ») dont il faut maîtriser la pression.</p>
+  <p>Le modèle physique tourne sur le <strong>serveur de simulation</strong> (<code>192.168.95.45</code>). Quatre flux agissent sur le réacteur :</p>
+  <ul>
+    <li><strong>Feed 1 et Feed 2</strong> — les alimentations. Ouvrir ces vannes fait entrer de la matière&nbsp;: la <strong>pression monte</strong>.</li>
+    <li><strong>Purge</strong> — la vanne d'évacuation. L'ouvrir relâche la pression&nbsp;: la <strong>pression baisse</strong>.</li>
+    <li><strong>Product</strong> — le soutirage du produit fini.</li>
+    <li><strong>Analyzer</strong> — mesure la composition du mélange.</li>
+  </ul>
+  <p>Tout l'enjeu de sûreté tient en une phrase&nbsp;: <strong>si on alimente sans purger, la pression grimpe jusqu'à la rupture du réacteur.</strong> C'est exactement le mécanisme de l'explosion obtenue au TP.</p>
+</section>
+
+<section class="col">
+  <div class="sec-head"><span class="sec-num">2</span><h2>La boucle de régulation : qui parle à qui</h2></div>
+  <p>La commande circule sur quatre maillons. Le point à retenir&nbsp;: <strong>l'automate est à la fois serveur et maître Modbus</strong>.</p>
+
+  <div class="step"><span class="n">1</span><span class="b"><b>Simulation ↔ E/S déportées.</b> Les six modules d'entrées/sorties (<code>192.168.95.10</code> à <code>.15</code>) traduisent le monde physique du simulateur en registres Modbus, via une socket JSON (port <code>55555</code>). Chaque module = un capteur/actionneur (Feed 1, Feed 2, Purge, Product, Réacteur, Analyzer).</span></div>
+
+  <div class="step"><span class="n">2</span><span class="b"><b>Automate → E/S déportées (l'automate est MAÎTRE).</b> L'<strong>automate OpenPLC</strong> (<code>192.168.95.2</code>) interroge les six modules toutes les <strong>100 ms</strong> en Modbus/TCP&nbsp;: il lit les mesures (pression, niveau, composition) et écrit les commandes de vannes.</span></div>
+
+  <div class="step"><span class="n">3</span><span class="b"><b>Le programme de régulation.</b> À chaque cycle, l'automate exécute sa logique (écrite en langage ST)&nbsp;: il compare la pression mesurée à une <strong>consigne</strong> (<code>pressure_sp</code>) et ajuste l'ouverture des vannes d'alimentation et de purge pour la maintenir. C'est le cerveau du procédé.</span></div>
+
+  <div class="step"><span class="n">4</span><span class="b"><b>IHM → automate (l'automate est SERVEUR).</b> L'<strong>IHM Scada-LTS</strong> (<code>192.168.90.107</code>), en zone DMZ, se connecte en Modbus/TCP à l'automate pour <strong>afficher les mesures</strong> à l'opérateur et lui permettre de <strong>changer les consignes</strong>. Ce flux traverse le pare-feu entre les deux zones.</span></div>
+
+  <div class="step"><span class="n">+</span><span class="b"><b>Poste d'ingénierie.</b> Le poste <code>192.168.95.5</code> héberge l'éditeur OpenPLC&nbsp;: c'est de là qu'on écrit, compile et <strong>téléverse le programme</strong> dans l'automate via son interface web (<code>HTTP 8080</code>).</span></div>
+
+  <div class="callout">
+    <h4>Le double rôle de l'automate, en une image</h4>
+    <p>Vis-à-vis des <strong>E/S déportées</strong>, l'automate est le <strong>maître</strong> : c'est lui qui interroge. Vis-à-vis de l'<strong>IHM</strong>, il est le <strong>serveur</strong> : c'est l'IHM qui vient le lire. Un attaquant a donc deux surfaces distinctes : parler à l'automate comme le ferait l'IHM, ou parler aux E/S comme le ferait l'automate — les deux sans aucune authentification.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">3</span><h2>Les zones réseau</h2></div>
+  <div class="col"><p>L'installation est découpée — sur le papier — en deux sous-réseaux, plus un canal d'administration. Dans les faits, les frontières ne filtrent presque rien.</p></div>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Zone</th><th>Sous-réseau</th><th>Contient</th><th>Rôle</th></tr></thead>
+      <tbody>
+        <tr><td><strong>DMZ / bureautique</strong></td><td><code>192.168.90.0/24</code></td><td>IHM, poste Kali, Caldera</td><td>Supervision et accès « côté bureau »</td></tr>
+        <tr><td><strong>ICS / procédé</strong></td><td><code>192.168.95.0/24</code></td><td>Automate, poste d'ingénierie, E/S, simulation</td><td>Conduite du procédé</td></tr>
+        <tr><td><strong>Pare-feu / routeur</strong></td><td><code>.90.200 ↔ .95.200</code></td><td>Une machine, deux pattes (même MAC)</td><td>Devrait filtrer — laisse tout passer</td></tr>
+        <tr><td><strong>Admin (hors bande)</strong></td><td>bridge Docker</td><td>Tous les hôtes</td><td>Relie tout le monde <em>en contournant</em> le pare-feu</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note col">La zone ICS mélange les niveaux 0 (procédé), 1 (automate) et 2 (poste d'ingénierie) du modèle Purdue sur un seul réseau plat — ce qui, on le verra en partie 2, facilite grandement l'attaque.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">4</span><h2>Flux, protocoles et ports</h2></div>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Source → destination</th><th>Protocole / port</th><th>Sens &amp; usage</th><th>Sécurité</th></tr></thead>
+      <tbody>
+        <tr><td>IHM <code>.90.107</code> → Automate <code>.95.2</code></td><td>Modbus/TCP <code>502</code></td><td>Lit les mesures, écrit les consignes</td><td class="mono" style="color:var(--critical)">clair, sans auth.</td></tr>
+        <tr><td>Automate <code>.95.2</code> → E/S <code>.95.10-.15</code></td><td>Modbus/TCP <code>502</code></td><td>Scrutation 100 ms, commande des vannes</td><td class="mono" style="color:var(--critical)">clair, sans auth.</td></tr>
+        <tr><td>E/S <code>.95.10-.15</code> ↔ Simulation <code>.95.45</code></td><td>Socket JSON <code>55555</code></td><td>Image du monde physique</td><td class="mono" style="color:var(--critical)">interne, non protégé</td></tr>
+        <tr><td>Poste ing. <code>.95.5</code> → Automate <code>.95.2</code></td><td>HTTP <code>8080</code></td><td>Dépôt / compilation du programme ST</td><td class="mono" style="color:var(--critical)">HTTP, mdp par défaut</td></tr>
+        <tr><td>Navigateurs → IHM / simulation</td><td>HTTP <code>80 · 8080 · 6080 · 6088</code></td><td>Supervision, bureaux à distance</td><td class="mono" style="color:var(--critical)">en clair</td></tr>
+        <tr><td>Tous → Routeur <code>.200</code></td><td>DNS <code>53</code> · admin <code>5000</code></td><td>Résolution de noms, config pare-feu</td><td class="mono" style="color:var(--critical)">HTTP, admin/mdp faible</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="col">
+  <div class="sec-head"><span class="sec-num">5</span><h2>En résumé : pourquoi c'est fragile</h2></div>
+  <p>L'architecture fonctionne, mais elle repose sur trois hypothèses qui ne tiennent pas face à un attaquant&nbsp;:</p>
+  <ul>
+    <li><strong>« Le réseau est de confiance »</strong> — Modbus n'authentifie personne&nbsp;: quiconque atteint le port <code>502</code> peut lire et écrire.</li>
+    <li><strong>« La séparation des zones protège »</strong> — le pare-feu laisse tout passer et un canal d'administration le contourne entièrement.</li>
+    <li><strong>« La régulation garantit la sûreté »</strong> — la seule protection contre la surpression est le programme de l'automate&nbsp;; or ce programme peut être remplacé depuis le poste d'ingénierie.</li>
+  </ul>
+  <p>Ce sont ces trois hypothèses que la <strong>partie 2 (analyse des vulnérabilités)</strong> va démonter, avant de proposer l'architecture corrigée en partie 4.</p>
+</section>
+
+<footer>
+  ECAM 5N — Promotion 2027 · Cybersécurité industrielle · Partie 1/4 — Architecture initiale<br>
+  Thiboult · Grot · Gledel · Idigov · Environnement GRFICSv3 (Fortiphyd Logic)
+</footer>
+
+</div>
