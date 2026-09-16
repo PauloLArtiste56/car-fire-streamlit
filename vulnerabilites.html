@@ -82,6 +82,9 @@
   .vuln dt{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);padding-top:3px;white-space:nowrap}
   .vuln dd{margin:0;font-size:14.5px;color:var(--ink-soft)}
   .vuln dd b{color:var(--ink)}
+  .vuln dt.fix{color:var(--safe)}
+  .vuln dd.fix{color:var(--safe);font-family:var(--sans);font-size:14px}
+  td.fix{color:var(--safe);font-family:var(--sans)}
   code{font-family:var(--mono);font-size:.86em;background:var(--surface-2);padding:1px 4px;border-radius:2px;color:var(--accent)}
 
   .callout{border:1px solid var(--line);border-top:3px solid var(--accent);background:var(--surface);padding:15px 18px;margin:26px 0 0}
@@ -100,8 +103,8 @@
   <p class="standfirst">Trois familles de failles ont permis d'aller de la porte d'entrée jusqu'à l'explosion du réacteur. On les sépare pour bien voir ce que chacune apporte à l'attaquant.</p>
   <div class="families">
     <div class="fam p"><span class="k">Physique</span><h4>9 failles sur site</h4><p>Accès aux locaux et aux secrets, sans toucher au réseau.</p></div>
-    <div class="fam l"><span class="k">Logique · réseau</span><h4>3 failles clés</h4><p>Le réseau laisse écouter, usurper et circuler librement.</p></div>
-    <div class="fam s"><span class="k">Logicielle · hôtes</span><h4>3 failles clés</h4><p>Les machines n'authentifient rien et ne surveillent rien.</p></div>
+    <div class="fam l"><span class="k">Logique · réseau</span><h4>4 failles clés</h4><p>Le réseau laisse écouter, usurper et circuler librement.</p></div>
+    <div class="fam s"><span class="k">Logicielle · hôtes</span><h4>4 failles clés</h4><p>Les machines n'authentifient rien et ne surveillent rien.</p></div>
   </div>
 </header>
 
@@ -110,17 +113,17 @@
   <p class="sub">Les 9 points relevés en se promenant dans l'usine. Ils donnent un accès direct — sans une seule ligne de code — aux locaux, aux équipements et aux mots de passe.</p>
   <div class="table-scroll">
     <table>
-      <thead><tr><th>#</th><th>Vulnérabilité constatée</th><th>Ce qu'elle offre à l'attaquant</th><th>Nature</th></tr></thead>
+      <thead><tr><th>#</th><th>Vulnérabilité constatée</th><th>Risque</th><th>Correctif</th></tr></thead>
       <tbody>
-        <tr><td class="n">1</td><td>Porte à badge maintenue ouverte par un parpaing</td><td>Entrée dans la zone sans badge</td><td class="nat">Accès</td></tr>
-        <tr><td class="n">2</td><td>Mot de passe sur post-it</td><td>Identifiant valide, offert</td><td class="nat">Secret</td></tr>
-        <tr><td class="n">3</td><td>Second mot de passe sur post-it</td><td>Second identifiant valide</td><td class="nat">Secret</td></tr>
-        <tr><td class="n">4</td><td>Carte d'accès laissée sur le bureau</td><td>Badge d'accès réutilisable</td><td class="nat">Accès</td></tr>
-        <tr><td class="n">5</td><td>Routeur en libre accès</td><td>Branchement pirate, reconfiguration réseau</td><td class="nat">Réseau</td></tr>
-        <tr><td class="n">6</td><td>Automate (PLC) laissé ouvert</td><td>Action directe sur l'organe de commande</td><td class="nat">Commande</td></tr>
-        <tr><td class="n">7</td><td>IHM utilisable sans se connecter</td><td>Conduite du procédé sans authentification</td><td class="nat">Commande</td></tr>
-        <tr><td class="n">8</td><td>Recette du procédé jetée à la corbeille</td><td>Fuite d'information sensible</td><td class="nat">Secret</td></tr>
-        <tr><td class="n">9</td><td>Fontaine à eau à côté de l'automate</td><td>Risque de dégât / court-circuit</td><td class="nat">Sûreté</td></tr>
+        <tr><td class="n">1</td><td>Porte à badge maintenue ouverte par un parpaing</td><td>Entrée sans badge</td><td class="fix">Ferme-porte + alarme porte forcée, sensibilisation</td></tr>
+        <tr><td class="n">2</td><td>Mot de passe sur post-it</td><td>Identifiant offert</td><td class="fix">Coffre-fort de mots de passe, « clean desk »</td></tr>
+        <tr><td class="n">3</td><td>Second mot de passe sur post-it</td><td>Identifiant offert</td><td class="fix">Idem : aucun secret sur papier</td></tr>
+        <tr><td class="n">4</td><td>Carte d'accès laissée sur le bureau</td><td>Badge réutilisable</td><td class="fix">Badge personnel porté sur soi, désactivation si perdu</td></tr>
+        <tr><td class="n">5</td><td>Routeur en libre accès</td><td>Branchement pirate</td><td class="fix">Armoire réseau verrouillée, ports inutilisés coupés</td></tr>
+        <tr><td class="n">6</td><td>Automate (PLC) laissé ouvert</td><td>Action directe</td><td class="fix">Armoire à clé, commutateur RUN/PROG physique</td></tr>
+        <tr><td class="n">7</td><td>IHM utilisable sans se connecter</td><td>Conduite sans auth.</td><td class="fix">Verrouillage de session auto, authentification obligatoire</td></tr>
+        <tr><td class="n">8</td><td>Recette du procédé jetée à la corbeille</td><td>Fuite d'info sensible</td><td class="fix">Destruction sécurisée (broyeur), marquage confidentiel</td></tr>
+        <tr><td class="n">9</td><td>Fontaine à eau à côté de l'automate</td><td>Dégât / court-circuit</td><td class="fix">Éloigner les liquides, bac de rétention</td></tr>
       </tbody>
     </table>
   </div>
@@ -129,13 +132,14 @@
 
 <section>
   <div class="sec-head"><span class="sec-num">B</span><h2>Vulnérabilités logiques (réseau)</h2></div>
-  <p class="sub">Comment le réseau lui-même a trahi l'usine — les 3 failles qui ouvrent le chemin vers l'automate.</p>
+  <p class="sub">Comment le réseau lui-même a trahi l'usine — les failles qui ouvrent le chemin vers l'automate.</p>
   <div class="cards">
     <article class="vuln" data-sev="crit">
       <div class="vhead"><span class="vref">V1</span><span class="vname">Pare-feu ouvert</span><span class="badge">Critique</span></div>
       <dl>
         <dt>C'est</dt><dd>Une règle <code>ACCEPT all</code> « temporaire » laissée en place : la DMZ atteint directement la zone procédé.</dd>
         <dt>Effet</dt><dd><b>Aucune séparation réelle</b> — un poste bureautique compromis parle à l'automate en une étape.</dd>
+      <dt class="fix">Correctif</dt><dd class="fix">Refus par défaut, une règle par flux, suppression de la règle « allow all »</dd>
       </dl>
     </article>
     <article class="vuln" data-sev="crit">
@@ -143,6 +147,7 @@
       <dl>
         <dt>C'est</dt><dd>Le protocole de commande (port <code>502</code>) n'a ni identité ni signature : il circule en clair.</dd>
         <dt>Effet</dt><dd><b>Quiconque atteint le port 502 lit et écrit</b> les registres des vannes — vu au Wireshark du TP.</dd>
+      <dt class="fix">Correctif</dt><dd class="fix">Pare-feu à inspection Modbus (codes fonction en liste blanche), à terme Modbus/TLS</dd>
       </dl>
     </article>
     <article class="vuln" data-sev="crit">
@@ -150,6 +155,7 @@
       <dl>
         <dt>C'est</dt><dd>Réseau à plat sans protection : <code>arpspoof</code> permet de se faire passer pour l'automate ou la passerelle.</dd>
         <dt>Effet</dt><dd><b>Interception et réécriture</b> du trafic IHM↔automate : l'opérateur voit du normal pendant la dérive.</dd>
+      <dt class="fix">Correctif</dt><dd class="fix">Dynamic ARP Inspection, port-security, 802.1X sur les commutateurs</dd>
       </dl>
     </article>
     <article class="vuln" data-sev="maj">
@@ -157,6 +163,7 @@
       <dl>
         <dt>C'est</dt><dd>Un réseau d'admin relie tous les hôtes <b>en contournant le pare-feu</b>.</dd>
         <dt>Effet</dt><dd>Rend caduque toute segmentation tant qu'il existe.</dd>
+      <dt class="fix">Correctif</dt><dd class="fix">Suppression du canal hors bande, administration via un bastion unique</dd>
       </dl>
     </article>
   </div>
@@ -164,13 +171,14 @@
 
 <section>
   <div class="sec-head"><span class="sec-num">C</span><h2>Vulnérabilités logicielles (hôtes)</h2></div>
-  <p class="sub">Ce que les machines elles-mêmes autorisent — les 3 failles qui transforment l'accès en sabotage.</p>
+  <p class="sub">Ce que les machines elles-mêmes autorisent — les failles qui transforment l'accès en sabotage.</p>
   <div class="cards">
     <article class="vuln" data-sev="crit">
       <div class="vhead"><span class="vref">V2</span><span class="vname">Identifiants par défaut</span><span class="badge tp">exploité au TP</span></div>
       <dl>
         <dt>C'est</dt><dd><code>admin</code>, <code>openplc</code>, mots de passe faibles partout, aucun compte nominatif.</dd>
         <dt>Effet</dt><dd><b>Connexion directe</b> aux interfaces d'administration, sans traçabilité.</dd>
+      <dt class="fix">Correctif</dt><dd class="fix">Comptes nominatifs + MFA, mots de passe forts, fin des comptes par défaut</dd>
       </dl>
     </article>
     <article class="vuln" data-sev="crit">
@@ -178,6 +186,7 @@
       <dl>
         <dt>C'est</dt><dd>L'automate accepte n'importe quel programme téléversé (web 8080), sans signature ni contrôle.</dd>
         <dt>Effet</dt><dd><b>Le coup fatal</b> : <code>pressure_sp := 65535</code> → purge bloquée → explosion.</dd>
+      <dt class="fix">Correctif</dt><dd class="fix">Programme signé et vérifié, interface d’ingénierie fermée en exploitation</dd>
       </dl>
     </article>
     <article class="vuln" data-sev="maj">
@@ -185,6 +194,7 @@
       <dl>
         <dt>C'est</dt><dd>IDS aveugle sur la zone procédé, SIEM désactivé, aucun journal centralisé.</dd>
         <dt>Effet</dt><dd><b>L'attaque passe inaperçue</b> — aucune alerte, aucune trace pour l'analyser.</dd>
+      <dt class="fix">Correctif</dt><dd class="fix">IDS étendu à l’OT, SIEM activé, journalisation centralisée</dd>
       </dl>
     </article>
     <article class="vuln" data-sev="crit">
@@ -192,6 +202,7 @@
       <dl>
         <dt>C'est</dt><dd>La seule protection contre la surpression est le programme de l'automate — celui qu'on pirate.</dd>
         <dt>Effet</dt><dd><b>Rien n'arrête l'emballement</b> une fois l'automate compromis : c'est ce qui rend l'explosion possible.</dd>
+      <dt class="fix">Correctif</dt><dd class="fix">Barrière de sécurité SIL 2 indépendante (interlock câblé, IEC 61511)</dd>
       </dl>
     </article>
   </div>
